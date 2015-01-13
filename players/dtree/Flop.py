@@ -81,8 +81,7 @@ class Flop(object):
             elif score[0] == 0:
                 bet_prob += score[1][0] * .01
 
-            r = random()
-            if r < bet_prob:
+            if random() < bet_prob:
                 betting_action = [x for x in legal_actions if 'BET' in x]
                 if not betting_action:
                     return 'CHECK'
@@ -92,20 +91,20 @@ class Flop(object):
 
                 # BET
                 if score[0] >= 4:
-                    # Max bet with a straight
+                    # Max bet with a straight or better
                     bet_amt = hi
-                    return 'RAISE:%d' % bet_amt
+                    return 'BET:%d' % bet_amt
 
                 if score[0] >= 2:
                     bet_amt = max(min(int((.25 + random()) * hi * State.aggressiveness), hi), lo)
-                    return 'RAISE:%d' % bet_amt
+                    return 'BET:%d' % bet_amt
 
                 if score[0] >= 1:
                     bet_amt = max(min(int((.05 * score[1]) * hi * State.aggressiveness), hi), lo)
-                    return 'RAISE:%d' % bet_amt
+                    return 'BET:%d' % bet_amt
 
                 bet_amt = lo
-                return 'RAISE:%d' % bet_amt
+                return 'BET:%d' % bet_amt
             else:
                 return 'CHECK'
 
@@ -140,7 +139,18 @@ class Flop(object):
                     guessed_win_prob += .05 * score[1]
 
                 if pot_odds < guessed_win_prob:
-                    return call_action
+                    if pot_odds < 2 * guessed_win_prob:
+                        # Raise if we have double the odds to call
+                        betting_action = [x for x in legal_actions if 'RAISE' in x]
+                        if not betting_action:
+                            return call_action
+                        b, lo, hi = betting_action[0].split(':')
+                        lo = int(lo)
+                        hi = int(hi)
+                        return 'RAISE:%d' % hi
+                    else:
+                        # Just enough to call but not raise
+                        return call_action
 
                 return 'FOLD'
 

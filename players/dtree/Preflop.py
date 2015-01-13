@@ -4,7 +4,7 @@ from lib.starting_hands import classify_hole, HoleScorer
 from random import random
 
 
-PLAY_PREFLOP = .5
+PLAY_PREFLOP = .3
 
 class Preflop(object):
 
@@ -95,12 +95,12 @@ class Preflop(object):
         # UTG three handed
 
         if seat == 1 and numActivePlayers == 3 and firstRound:
-            if hand_score > PLAY_PREFLOP * State.looseness:
+            if hand_score > (PLAY_PREFLOP - .1) / State.looseness:
                 # Then we are going to CALL / RAISE
 
                 # This is the case where we must call and cannot raise
                 raising_action = [x for x in legal_actions if 'RAISE' in x]
-                if len(raising_action) == 0:
+                if not raising_action:
                     call_action = [x for x in legal_actions if 'CALL' in x]
                     if not call_action:
                         return 'CHECK'
@@ -114,12 +114,11 @@ class Preflop(object):
                     lo = int(lo)
                     hi = int(hi)
 
-                    if hand_score < .75:
+                    if hand_score < .85:
                         return 'RAISE:%d' % lo
 
                     bet_amt = max(min(int(hand_score * hi * State.aggressiveness), hi), lo)
                     return 'RAISE:%d' % bet_amt
-
 
                 else:
                     call_action = [x for x in legal_actions if 'CALL' in x]
@@ -161,7 +160,7 @@ class Preflop(object):
 
         if seat == 2 and numActivePlayers == 3 and firstRound:
             # TODO: Consider if we are facing a raise already
-            if hand_score > PLAY_PREFLOP * State.looseness:
+            if hand_score > (PLAY_PREFLOP - .15) / State.looseness:
                 # Then we are going to CALL / RAISE
 
                 # This is the case where we must call and cannot raise
@@ -180,7 +179,7 @@ class Preflop(object):
                     lo = int(lo)
                     hi = int(hi)
 
-                    if hand_score < .75:
+                    if hand_score < .85:
                         return 'RAISE:%d' % lo
 
                     bet_amt = max(min(int(hand_score * hi * State.aggressiveness), hi), lo)
@@ -200,7 +199,7 @@ class Preflop(object):
 
             else:
                 # Normally fold, but randomly raise
-                if random() < .1:
+                if random() * hand_score < .25:
                     # Randomly raise here
                     raising_action = [x for x in legal_actions if 'RAISE' in x]
                     if not raising_action:
@@ -224,7 +223,7 @@ class Preflop(object):
         # TODO: fill in the logic here
         if seat == 3 and numActivePlayers == 3 and firstRound:
             # TODO: Consider if we are facing a raise already
-            if hand_score > PLAY_PREFLOP * State.looseness:
+            if hand_score > (PLAY_PREFLOP - .2) / State.looseness:
                 # Then we are going to CALL / RAISE
 
                 # This is the case where we must call and cannot raise
@@ -236,19 +235,18 @@ class Preflop(object):
                     return call_action[0]
 
                 # Deciding to raise
-                if hand_score > .9:
+                if hand_score > .8:
                     # We are raising if we are good enough
                     raising_action = [x for x in legal_actions if 'RAISE' in x][0]
                     r, lo, hi = raising_action.split(':')
                     lo = int(lo)
                     hi = int(hi)
 
-                    if hand_score < .95:
+                    if hand_score < .9:
                         return 'RAISE:%d' % lo
 
                     bet_amt = max(min(int(hand_score * hi * State.aggressiveness), hi), lo)
                     return 'RAISE:%d' % bet_amt
-
 
                 else:
                     call_action = [x for x in legal_actions if 'CALL' in x]
@@ -290,12 +288,12 @@ class Preflop(object):
 
         if numActivePlayers == 2 and firstRound and ((seat == 1 and State.num_active == 2) or \
                 (seat == 2 and State.num_active == 3)):
-            if hand_score > (PLAY_PREFLOP + .4) * State.looseness:
+            if hand_score > (PLAY_PREFLOP - .2) / State.looseness:
                 # Then we are going to CALL / RAISE
 
                 # This is the case where we must call and cannot raise
                 raising_action = [x for x in legal_actions if 'RAISE' in x]
-                if len(raising_action) == 0:
+                if not raising_action:
                     call_action = [x for x in legal_actions if 'CALL' in x]
                     if not call_action:
                         return 'CHECK'
@@ -355,7 +353,7 @@ class Preflop(object):
         if numActivePlayers == 2 and firstRound and ((seat == 3 and State.num_active == 2) or \
                 (seat == 3 and State.num_active == 3)):
             # TODO: Consider if we are facing a raise already
-            if hand_score > PLAY_PREFLOP * State.looseness:
+            if hand_score > PLAY_PREFLOP / State.looseness:
                 # Then we are going to CALL / RAISE
 
                 # This is the case where we must call and cannot raise
@@ -418,9 +416,14 @@ class Preflop(object):
         ########################################################################
         # Second round and we called last time
         # TODO: Logic
-        if not firstRound and 'CALL' in prev_actions[0]:
+        if not firstRound and i_called:
             # Play the pot odds
-            call_action = [x for x in legal_actions if 'CALL' in x][0]
+            call_action = [x for x in legal_actions if 'CALL' in x]
+            if not call_action:
+                return 'CHECK'
+            else:
+                call_action = call_action[0]
+
             call_amt = int(call_action.split(':')[-1])
             pot_size = potSize
 
@@ -439,9 +442,14 @@ class Preflop(object):
         ########################################################################
         # Second round and we raised last time
         # TODO: Logic
-        if not firstRound and 'CALL' not in prev_actions[0]:
+        if not firstRound and not i_called:
             # Play the pot odds
-            call_action = [x for x in legal_actions if 'CALL' in x][0]
+            call_action = [x for x in legal_actions if 'CALL' in x]
+            if not call_action:
+                return 'CHECK'
+            else:
+                call_action = call_action[0]
+
             call_amt = int(call_action.split(':')[-1])
             pot_size = potSize
 

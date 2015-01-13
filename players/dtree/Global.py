@@ -59,7 +59,7 @@ class State(object):
         cls.opp2Name = opp2Name
         cls.stackSize = int(stackSize)
         cls.bb = int(bb)
-        cls.numHands = int(numHands)
+        cls.num_hands = int(numHands)
         cls.timeBank = float(timeBank)
 
 
