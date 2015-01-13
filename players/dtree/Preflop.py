@@ -72,7 +72,6 @@ class Preflop(object):
         numActivePlayers = numActivePlayers
         firstRound = any([x for x in prev_actions if 'POST' in x])
         i_called = True if prev_actions and 'CALL' in prev_actions[0] else False
-        folded = any([x for x in prev_actions if 'FOLD' in x])
 
 
         # FIRST TIME AROUND
@@ -206,6 +205,7 @@ class Preflop(object):
 
 
 
+
         ############################## Case 3 ##################################
         ########################################################################
         # Big Blind three handed
@@ -262,6 +262,10 @@ class Preflop(object):
 
 
 
+
+
+
+
         ############################## Case 4 ##################################
         ########################################################################
         # Not big blind two players
@@ -310,6 +314,8 @@ class Preflop(object):
                     return 'RAISE:%d' % bet_amt
                 else:
                     return 'FOLD'
+
+
 
 
 
@@ -373,6 +379,9 @@ class Preflop(object):
                     return 'FOLD'
 
 
+
+
+
         ############################## Case 6 ##################################
         ########################################################################
         # Second round and we called last time
@@ -394,6 +403,9 @@ class Preflop(object):
                 return call_action
             else:
                 return 'FOLD'
+
+
+
 
 
         ############################## Case 7 ##################################
