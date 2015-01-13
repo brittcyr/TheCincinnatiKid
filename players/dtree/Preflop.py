@@ -6,6 +6,14 @@ from random import random
 
 PLAY_PREFLOP = .3
 
+
+def try_to_call(legal_actions):
+    call_action = [x for x in legal_actions if 'CALL' in x]
+    if not call_action:
+        return 'CHECK'
+    return call_action[0]
+
+
 class Preflop(object):
 
     @classmethod
@@ -64,6 +72,7 @@ class Preflop(object):
         numActivePlayers = numActivePlayers
         firstRound = any([x for x in prev_actions if 'POST' in x])
         i_called = True if prev_actions and 'CALL' in prev_actions[0] else False
+        folded = any([x for x in prev_actions if 'FOLD' in x])
 
 
         # FIRST TIME AROUND
@@ -101,10 +110,7 @@ class Preflop(object):
                 # This is the case where we must call and cannot raise
                 raising_action = [x for x in legal_actions if 'RAISE' in x]
                 if not raising_action:
-                    call_action = [x for x in legal_actions if 'CALL' in x]
-                    if not call_action:
-                        return 'CHECK'
-                    return call_action[0]
+                    return try_to_call(legal_actions)
 
                 # Deciding to raise
                 if hand_score > .7:
@@ -121,17 +127,9 @@ class Preflop(object):
                     return 'RAISE:%d' % bet_amt
 
                 else:
-                    call_action = [x for x in legal_actions if 'CALL' in x]
-                    # Should not happen
-                    if not call_action:
-                        return 'CHECK'
-                    return call_action[0]
+                    return try_to_call(legal_actions)
 
-                call_action = [x for x in legal_actions if 'CALL' in x]
-                # Should not happen
-                if not call_action:
-                    return 'CHECK'
-                return call_action[0]
+                return try_to_call(legal_actions)
 
             else:
                 # Normally fold, but randomly raise
@@ -166,10 +164,7 @@ class Preflop(object):
                 # This is the case where we must call and cannot raise
                 raising_action = [x for x in legal_actions if 'RAISE' in x]
                 if len(raising_action) == 0:
-                    call_action = [x for x in legal_actions if 'CALL' in x]
-                    if not call_action:
-                        return 'CHECK'
-                    return call_action[0]
+                    return try_to_call(legal_actions)
 
                 # Deciding to raise
                 if hand_score > .7:
@@ -187,15 +182,9 @@ class Preflop(object):
 
 
                 else:
-                    call_action = [x for x in legal_actions if 'CALL' in x]
-                    if not call_action:
-                        return 'CHECK'
-                    return call_action[0]
+                    return try_to_call(legal_actions)
 
-                call_action = [x for x in legal_actions if 'CALL' in x]
-                if not call_action:
-                    return 'CHECK'
-                return call_action[0]
+                return try_to_call(legal_actions)
 
             else:
                 # Normally fold, but randomly raise
@@ -229,10 +218,7 @@ class Preflop(object):
                 # This is the case where we must call and cannot raise
                 raising_action = [x for x in legal_actions if 'RAISE' in x]
                 if len(raising_action) == 0:
-                    call_action = [x for x in legal_actions if 'CALL' in x]
-                    if not call_action:
-                        return 'CHECK'
-                    return call_action[0]
+                    return try_to_call(legal_actions)
 
                 # Deciding to raise
                 if hand_score > .8:
@@ -249,15 +235,9 @@ class Preflop(object):
                     return 'RAISE:%d' % bet_amt
 
                 else:
-                    call_action = [x for x in legal_actions if 'CALL' in x]
-                    if not call_action:
-                        return 'CHECK'
-                    return call_action[0]
+                    return try_to_call(legal_actions)
 
-                call_action = [x for x in legal_actions if 'CALL' in x]
-                if not call_action:
-                    return 'CHECK'
-                return call_action[0]
+                return try_to_call(legal_actions)
 
             else:
                 # Normally check/fold, but randomly raise
@@ -285,19 +265,16 @@ class Preflop(object):
         ############################## Case 4 ##################################
         ########################################################################
         # Not big blind two players
-
-        if numActivePlayers == 2 and firstRound and ((seat == 1 and State.num_active == 2) or \
-                (seat == 2 and State.num_active == 3)):
+        if numActivePlayers == 2 and firstRound and \
+                ((State.num_active == 2 and seat == 1) or
+                (State.num_active == 3 and seat == 2)):
             if hand_score > (PLAY_PREFLOP - .2) / State.looseness:
                 # Then we are going to CALL / RAISE
 
                 # This is the case where we must call and cannot raise
                 raising_action = [x for x in legal_actions if 'RAISE' in x]
                 if not raising_action:
-                    call_action = [x for x in legal_actions if 'CALL' in x]
-                    if not call_action:
-                        return 'CHECK'
-                    return call_action[0]
+                    return try_to_call(legal_actions)
 
                 # Deciding to raise
                 if hand_score > .7:
@@ -315,17 +292,9 @@ class Preflop(object):
 
 
                 else:
-                    call_action = [x for x in legal_actions if 'CALL' in x]
-                    # Should not happen
-                    if not call_action:
-                        return 'CHECK'
-                    return call_action[0]
+                    return try_to_call(legal_actions)
 
-                call_action = [x for x in legal_actions if 'CALL' in x]
-                # Should not happen
-                if not call_action:
-                    return 'CHECK'
-                return call_action[0]
+                return try_to_call(legal_actions)
 
             else:
                 # Normally fold, but randomly raise
@@ -350,8 +319,9 @@ class Preflop(object):
         ########################################################################
         # Big Blind two handed
         # TODO: fill in the logic here
-        if numActivePlayers == 2 and firstRound and ((seat == 3 and State.num_active == 2) or \
-                (seat == 3 and State.num_active == 3)):
+        if numActivePlayers == 2 and firstRound and \
+                ((State.num_active == 2 and seat == 2) or
+                (State.num_active == 3 and seat == 3)):
             # TODO: Consider if we are facing a raise already
             if hand_score > PLAY_PREFLOP / State.looseness:
                 # Then we are going to CALL / RAISE
@@ -359,10 +329,7 @@ class Preflop(object):
                 # This is the case where we must call and cannot raise
                 raising_action = [x for x in legal_actions if 'RAISE' in x]
                 if len(raising_action) == 0:
-                    call_action = [x for x in legal_actions if 'CALL' in x]
-                    if not call_action:
-                        return 'CHECK'
-                    return call_action[0]
+                    return try_to_call(legal_actions)
 
                 # Deciding to raise
                 if hand_score > .7:
@@ -380,15 +347,9 @@ class Preflop(object):
 
 
                 else:
-                    call_action = [x for x in legal_actions if 'CALL' in x]
-                    if not call_action:
-                        return 'CHECK'
-                    return call_action[0]
+                    return try_to_call(legal_actions)
 
-                call_action = [x for x in legal_actions if 'CALL' in x]
-                if not call_action:
-                    return 'CHECK'
-                return call_action[0]
+                return try_to_call(legal_actions)
 
             else:
                 # Normally check/fold, but randomly raise
@@ -429,11 +390,8 @@ class Preflop(object):
 
             pot_odds = float(call_amt) / (2 * call_amt + potSize)
 
-            if pot_odds < hand_score * .25:
-                call_action = [x for x in legal_actions if 'CALL' in x]
-                if not call_action:
-                    return 'CHECK'
-                return call_action[0]
+            if pot_odds < hand_score * .75:
+                return call_action
             else:
                 return 'FOLD'
 
