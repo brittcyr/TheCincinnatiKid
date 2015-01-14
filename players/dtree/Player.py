@@ -52,12 +52,6 @@ class Player:
             elif word == "HANDOVER":
                 State.handover(data)
 
-
-            # GETACTION potSize numBoardCards [boardCards] [stackSizes] numActivePlayers [activePlayers] numLastActions [lastActions] numLegalActions [legalActions] timebank
-
-            # HANDOVER [stackSizes] numBoardCards [boardCards] numLastActions [lastActions] timeBank
-
-
         # Clean up the socket.
         s.close()
 
@@ -65,8 +59,6 @@ class Player:
     @classmethod
     def get_action(cls, data):
         # Decide which class to use
-        # GETACTION potSize numBoardCards [boardCards] [stackSizes] numActivePlayers [activePlayers] numLastActions [lastActions] numLegalActions [legalActions] timebank
-
         numBoardCards = int(data.split()[2])
 
         # TODO: Use different players

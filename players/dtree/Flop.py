@@ -76,8 +76,7 @@ class Flop(object):
                 val_of_pair = score[1]
                 # val_of_pair goes from 0 - 12
                 bet_prob += .28
-                bet_prob += val_of_pair * .06
-                # scaled so always betting aces
+                bet_prob += val_of_pair * .03
             elif score[0] == 0:
                 bet_prob += score[1][0] * .01
 
@@ -122,7 +121,6 @@ class Flop(object):
 
             pot_odds = float(call_amt) / (2 * call_amt + potSize)
 
-
             # Determine what the odds of winning are by guessing
             guessed_win_prob = 0
             if score[0] == 0:
@@ -139,7 +137,12 @@ class Flop(object):
                     guessed_win_prob += .05 * score[1]
 
                 if pot_odds < guessed_win_prob:
-                    if pot_odds < 2 * guessed_win_prob:
+                    prev_bets = [x for x in prev_actions if 'RAISE' in x or 'BET' in x]
+
+                    # TODO: Reconsider this. Do not increase pot if there are two bets
+                    # until we are sure we have a better hand evaluator
+                    multibet = len(prev_bets) >= 2
+                    if pot_odds < 2 * guessed_win_prob and not multibet:
                         # Raise if we have double the odds to call
                         betting_action = [x for x in legal_actions if 'RAISE' in x]
                         if not betting_action:
@@ -147,7 +150,11 @@ class Flop(object):
                         b, lo, hi = betting_action[0].split(':')
                         lo = int(lo)
                         hi = int(hi)
-                        return 'RAISE:%d' % hi
+                        if pot_odds > 4 * guessed_win_prob:
+                            bet_amt = max(min(int(random() * 2 * lo * State.aggressiveness), hi), lo)
+                        else:
+                            bet_amt = max(min(int(random() * hi * State.aggressiveness), hi), lo)
+                        return 'RAISE:%d' % bet_amt
                     else:
                         # Just enough to call but not raise
                         return call_action
@@ -173,7 +180,8 @@ class Flop(object):
                     return 'RAISE:%d' % hi
                 else:
                     if random() < score[1] * .1:
-                        return 'RAISE:%d' % hi
+                        bet_amt = max(min(int(random() * hi * State.aggressiveness), hi), lo)
+                        return 'RAISE:%d' % bet_amt
                     else:
                         return call_action
 
@@ -187,7 +195,8 @@ class Flop(object):
 
             # Otherwise we want to get the pot bigger
             if pot_odds < 2 * guessed_win_prob:
-                return 'RAISE:%d' % hi
+                bet_amt = max(min(int(random() * hi * State.aggressiveness), hi), lo)
+                return 'RAISE:%d' % bet_amt
 
             return call_action
 
