@@ -1,6 +1,26 @@
-from lib.hand_eval import convert_string_to_int, score_best_five
+from lib.hand_eval import convert_string_to_int, score_best_five, eval_hand
 from Global import State
 from random import random
+
+
+def quick_check_if_hole_helps(score, board):
+    if len(board) == 3:
+        board = board + [-1, -6]
+    elif len(board) == 4:
+        board = board + [-1]
+    that_score = eval_hand(board)
+    if that_score[0] == score[0]:
+        return False
+    return True
+
+def split_raise(legal_actions):
+    raising_action = [x for x in legal_actions if 'RAISE' in x or 'BET' in x]
+    if not raising_action:
+        return False, False
+    r, lo, hi = raising_action[0].split(':')
+    lo = int(lo)
+    hi = int(hi)
+    return lo, hi
 
 
 class Flop(object):
@@ -81,12 +101,7 @@ class Flop(object):
                 bet_prob += score[1][0] * .01
 
             if random() < bet_prob:
-                betting_action = [x for x in legal_actions if 'BET' in x]
-                if not betting_action:
-                    return 'CHECK'
-                b, lo, hi = betting_action[0].split(':')
-                lo = int(lo)
-                hi = int(hi)
+                lo, hi = split_raise(legal_actions)
 
                 # BET
                 if score[0] >= 4:
@@ -136,38 +151,31 @@ class Flop(object):
                     guessed_win_prob += .7
                     guessed_win_prob += .05 * score[1]
 
+                # If we are playing the board, we are not good
+                if not quick_check_if_hole_helps(score, board_cards):
+                    guessed_win_prob = .1
+
                 if pot_odds < guessed_win_prob:
                     prev_bets = [x for x in prev_actions if 'RAISE' in x or 'BET' in x]
-
-                    # TODO: Reconsider this. Do not increase pot if there are two bets
-                    # until we are sure we have a better hand evaluator
                     multibet = len(prev_bets) >= 2
                     if pot_odds < 2 * guessed_win_prob and not multibet:
-                        # Raise if we have double the odds to call
-                        betting_action = [x for x in legal_actions if 'RAISE' in x]
-                        if not betting_action:
+                        lo, hi = split_raise(legal_actions)
+                        if not lo:
                             return call_action
-                        b, lo, hi = betting_action[0].split(':')
-                        lo = int(lo)
-                        hi = int(hi)
+
                         if pot_odds > 4 * guessed_win_prob:
                             bet_amt = max(min(int(random() * 2 * lo * State.aggressiveness), hi), lo)
                         else:
                             bet_amt = max(min(int(random() * hi * State.aggressiveness), hi), lo)
                         return 'RAISE:%d' % bet_amt
-                    else:
-                        # Just enough to call but not raise
-                        return call_action
+
+                    return call_action
 
                 return 'FOLD'
 
-
-            betting_action = [x for x in legal_actions if 'RAISE' in x]
-            if not betting_action:
+            lo, hi = split_raise(legal_actions)
+            if not lo:
                 return call_action
-            b, lo, hi = betting_action[0].split(':')
-            lo = int(lo)
-            hi = int(hi)
 
             # FULL HOUSE or better is always max raise
             if score[0] >= 6:
@@ -192,13 +200,11 @@ class Flop(object):
                     return 'RAISE:%d' % hi
                 return call_action
 
-
             # Otherwise we want to get the pot bigger
             if pot_odds < 2 * guessed_win_prob:
                 bet_amt = max(min(int(random() * hi * State.aggressiveness), hi), lo)
                 return 'RAISE:%d' % bet_amt
 
             return call_action
-
 
         return 'CHECK'

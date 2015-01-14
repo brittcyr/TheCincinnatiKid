@@ -9,7 +9,7 @@ Running engine with parameters:
     CONNECTION_TIMEOUT=2    ENFORCE_TIMING_RESTRICTION=true
     NUMBER_OF_HANDS=1000    TIME_RESTRICTION_PER_GAME=10.000
     DISPLAY_ILLEGAL_ACTIONS=true
-Writing to hand log: ./hand_logs/match_DTREE_DTREE2_RANDOM3_01_14_14_40_53_007.txt
+Writing to hand log: ./hand_logs/match_DTREE_DTREE2_RANDOM3_01_14_18_22_16_500.txt
 Compiling bot ./players/dtree with: scons
 Output by bot DTREE will be in DTREE.dump
 Initialized DTREE on port 3000
@@ -22,7 +22,7 @@ Shutting down player DTREE2
 Finished shutting down socket player: DTREE2
 
 Running triplicate match.
-Writing to hand log: ./hand_logs/match_DTREE_DTREE2_RANDOM3_01_14_14_40_53_0072.txt
+Writing to hand log: ./hand_logs/match_DTREE_DTREE2_RANDOM3_01_14_18_22_16_5002.txt
 Compiling bot ./players/dtree with: scons
 Output by bot DTREE will be in DTREE.dump
 Initialized DTREE on port 3000
@@ -35,7 +35,7 @@ Shutting down player DTREE2
 Finished shutting down socket player: DTREE2
 
 Running triplicate match.
-Writing to hand log: ./hand_logs/match_DTREE_DTREE2_RANDOM3_01_14_14_40_53_0073.txt
+Writing to hand log: ./hand_logs/match_DTREE_DTREE2_RANDOM3_01_14_18_22_16_5003.txt
 Compiling bot ./players/dtree with: scons
 Output by bot DTREE will be in DTREE.dump
 Initialized DTREE on port 3000
@@ -48,7 +48,7 @@ Shutting down player DTREE
 Finished shutting down socket player: DTREE
 
 Running triplicate match.
-Writing to hand log: ./hand_logs/match_DTREE_DTREE2_RANDOM3_01_14_14_40_53_0074.txt
+Writing to hand log: ./hand_logs/match_DTREE_DTREE2_RANDOM3_01_14_18_22_16_5004.txt
 Compiling bot ./players/dtree with: scons
 Output by bot DTREE will be in DTREE.dump
 Initialized DTREE on port 3000
@@ -61,7 +61,7 @@ Shutting down player DTREE
 Finished shutting down socket player: DTREE
 
 Running triplicate match.
-Writing to hand log: ./hand_logs/match_DTREE_DTREE2_RANDOM3_01_14_14_40_53_0075.txt
+Writing to hand log: ./hand_logs/match_DTREE_DTREE2_RANDOM3_01_14_18_22_16_5005.txt
 Compiling bot ./players/dtree with: scons
 Output by bot DTREE will be in DTREE.dump
 Initialized DTREE on port 3000
@@ -74,7 +74,7 @@ Shutting down player DTREE2
 Finished shutting down socket player: DTREE2
 
 Running triplicate match.
-Writing to hand log: ./hand_logs/match_DTREE_DTREE2_RANDOM3_01_14_14_40_53_0076.txt
+Writing to hand log: ./hand_logs/match_DTREE_DTREE2_RANDOM3_01_14_18_22_16_5006.txt
 Compiling bot ./players/dtree with: scons
 Output by bot DTREE will be in DTREE.dump
 Initialized DTREE on port 3000
