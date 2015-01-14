@@ -59,6 +59,7 @@ if __name__ == '__main__':
     # Cleanup the scons and sql
     results = subprocess.Popen(["rm", "scons.dump"])
     results = subprocess.Popen(["rm", "sqlite.db"])
+    results = subprocess.Popen(["rm", "*.dump"])
 
     # Write the hand logs in case they were wanted
     f = open('replayer/runner_result', 'w')
