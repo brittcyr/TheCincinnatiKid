@@ -325,7 +325,7 @@ def score_best_five(cards):
         for missing in range(6):
             current = [cards[x] for x in range(6) if x != missing]
             score = eval_hand(current)
-            if score > best:
+            if score > best[0]:
                 best = (score, current)
         return best[0]
 
@@ -335,6 +335,6 @@ def score_best_five(cards):
                 current = [cards[x] for x in range(7)  \
                         if x != missing1 and x != missing2]
                 score = eval_hand(current)
-                if score > best:
+                if score > best[0]:
                     best = (score, current)
         return best[0]

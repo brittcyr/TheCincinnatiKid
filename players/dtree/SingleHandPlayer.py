@@ -75,4 +75,4 @@ class Player:
 
 if __name__ == '__main__':
     bot = Player()
-    bot.run('/afs/athena.mit.edu/user/c/y/cyrbritt/workspace/poker/actions')
+    bot.run('/afs/athena.mit.edu/user/c/y/cyrbritt/workspace/poker/replayer/actions')

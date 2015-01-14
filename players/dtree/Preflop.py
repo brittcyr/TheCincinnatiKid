@@ -3,15 +3,19 @@ from Global import State
 from lib.starting_hands import classify_hole, HoleScorer
 from random import random
 
-
-PLAY_PREFLOP = .3
 SEAT1 = 1
 SEAT2 = 2
 SEAT3 = 3
 TWO_PLAYERS = 2
 THREE_PLAYERS = 3
-UTG_EXTRA = .2
 
+PLAY_PREFLOP = .3
+
+UTG_EXTRA = .1
+RAISE_UTG = .75
+MIN_RAISE_UTG = .85
+
+SB_EXTRA = .1
 
 def try_to_check(legal_actions):
     check_action = [x for x in legal_actions if 'CHECK' in x]
@@ -42,9 +46,7 @@ def split_raise(legal_actions):
     return lo, hi
 
 
-
 class Preflop(object):
-
     @classmethod
     def get_action(cls, data):
         # GETACTION potSize numBoardCards [boardCards] [stackSizes]
@@ -79,16 +81,10 @@ class Preflop(object):
         legal_actions = []
         for _ in range(numLegalActions):
             legal_actions.append(data.pop(0))
-
-        if numLegalActions == 1:
-            return legal_actions[0]
-
         State.timebank = float(data.pop(0))
 
-
-        if State.check_fold_to_win:
-            return try_to_check(legal_actions)
-
+        if numLegalActions == 1: return legal_actions[0]
+        if State.check_fold_to_win: return try_to_check(legal_actions)
 
 
         # These are the variables based on position
@@ -134,11 +130,11 @@ class Preflop(object):
                 if not raising_action: return try_to_call(legal_actions)
 
                 # Deciding to raise
-                if hand_score > .75:
+                if hand_score > RAISE_UTG:
                     lo, hi = split_raise(legal_actions)
                     if not lo: return 'FOLD'
 
-                    if hand_score < .85:
+                    if hand_score < MIN_RAISE_UTG:
                         return 'RAISE:%d' % lo
                     else:
                         bet_amt = max(min(int(hand_score * hi * \
@@ -166,13 +162,9 @@ class Preflop(object):
         ########################################################################
         # Small Blind three handed
         # TODO: fill in the logic here
-
         if seat == SEAT2 and numActivePlayers == THREE_PLAYERS and firstRound:
             # TODO: Consider if we are facing a raise already
-            if hand_score > (PLAY_PREFLOP - .05) / State.looseness:
-                # Then we are going to CALL / RAISE
-
-                # This is the case where we must call and cannot raise
+            if hand_score > (PLAY_PREFLOP - SB_EXTRA) / State.looseness:
                 raising_action = [x for x in legal_actions if 'RAISE' in x]
                 if len(raising_action) == 0: return try_to_call(legal_actions)
 
@@ -189,11 +181,7 @@ class Preflop(object):
                     bet_amt = max(min(int(hand_score * hi * State.aggressiveness), hi), lo)
                     return 'RAISE:%d' % bet_amt
 
-                else:
-                    return try_to_call(legal_actions)
-
                 return try_to_call(legal_actions)
-
             else:
                 # Normally fold, but randomly raise
                 if random() * hand_score > .15:
@@ -205,7 +193,6 @@ class Preflop(object):
                     return 'RAISE:%d' % bet_amt
                 else:
                     return 'FOLD'
-
 
 
 
