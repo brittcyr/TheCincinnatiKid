@@ -45,7 +45,6 @@ class State(object):
         # If we are late and need more than threshold bb's per hand
         # to win all the chips, then increase aggressiveness
         if (rest - cls.stackSize) / (cls.num_hands - cls.handId) > THRESHOLD * cls.bb:
-            # TODO: make this more dynamic
             cls.aggressiveness += .1
             return
 
@@ -112,3 +111,5 @@ class State(object):
         cls.timeBank = float(data.pop(0))
 
         # TODO: Decide how to adjust aggressiveness and looseness
+        # If we win by being aggressive preflop, increase aggressiveness and looseness
+        # If we lose by being aggressive preflop, increase aggressiveness and looseness

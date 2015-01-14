@@ -52,7 +52,6 @@ class Player:
         # Decide which class to use
         numBoardCards = int(data.split()[2])
 
-        # TODO: Use different players
         if numBoardCards == 0:
             # PREFLOP
             action = Preflop.get_action(data)
