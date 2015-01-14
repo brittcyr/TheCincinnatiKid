@@ -326,12 +326,12 @@ class Preflop(object):
                 if random() * hand_score > PLAY_PREFLOP / State.looseness * .8:
                     # Randomly raise here
                     lo, hi = split_raise(legal_actions)
-                    if not lo: return 'CHECK'
+                    if not lo: return try_to_check(legal_actions)
 
                     bet_amt = max(min(int(random() * hi * State.aggressiveness), hi), lo)
                     return 'RAISE:%d' % bet_amt
                 else:
-                    return 'CHECK' if checking_actione else 'FOLD'
+                    return try_to_check(legal_actions)
 
 
 

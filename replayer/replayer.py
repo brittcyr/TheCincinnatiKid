@@ -128,6 +128,8 @@ def parse_file(filename, hero):
             continue
         if 'wins' in line:
             continue
+        if 'illegal' in line.lower():
+            continue
 
     f.close()
     results.insert(0, create_new_hand_line(p1name, p1val, p2name, p2val, p3name, p3val, hero_hole[0], hero_hole[1], seat))
