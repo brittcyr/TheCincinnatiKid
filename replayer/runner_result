@@ -1,0 +1,118 @@
+   __  _____________  ___       __           __        __    
+  /  |/  /  _/_  __/ / _ \___  / /_____ ____/ /  ___  / /____
+ / /|_/ // /  / /   / ___/ _ \/  '_/ -_) __/ _ \/ _ \/ __(_-<
+/_/  /_/___/ /_/   /_/   \___/_/\_\\__/_/ /_.__/\___/\__/___/
+
+Starting the pokerbots engine...
+Running engine with parameters:
+    BIG_BLIND=2             STARTING_STACK=200
+    CONNECTION_TIMEOUT=2    ENFORCE_TIMING_RESTRICTION=true
+    NUMBER_OF_HANDS=1000    TIME_RESTRICTION_PER_GAME=10.000
+    DISPLAY_ILLEGAL_ACTIONS=true
+Writing to hand log: ./hand_logs/match_DTREE_DTREE2_DTREE3_01_14_13_57_53_337.txt
+Compiling bot ./players/dtree with: scons
+Output by bot DTREE will be in DTREE.dump
+Initialized DTREE on port 3000
+Compiling bot ./players/dtree with: scons
+Output by bot DTREE2 will be in DTREE2.dump
+Initialized DTREE2 on port 3001
+Compiling bot ./players/dtree with: scons
+Output by bot DTREE3 will be in DTREE3.dump
+Initialized DTREE3 on port 3002
+Shutting down player DTREE
+Finished shutting down socket player: DTREE
+Shutting down player DTREE2
+Finished shutting down socket player: DTREE2
+Shutting down player DTREE3
+Finished shutting down socket player: DTREE3
+
+Running triplicate match.
+Writing to hand log: ./hand_logs/match_DTREE_DTREE2_DTREE3_01_14_13_57_53_3372.txt
+Compiling bot ./players/dtree with: scons
+Output by bot DTREE will be in DTREE.dump
+Initialized DTREE on port 3000
+Compiling bot ./players/dtree with: scons
+Output by bot DTREE2 will be in DTREE2.dump
+Initialized DTREE2 on port 3001
+Compiling bot ./players/dtree with: scons
+Output by bot DTREE3 will be in DTREE3.dump
+Initialized DTREE3 on port 3002
+Shutting down player DTREE
+Finished shutting down socket player: DTREE
+Shutting down player DTREE3
+Finished shutting down socket player: DTREE3
+Shutting down player DTREE2
+Finished shutting down socket player: DTREE2
+
+Running triplicate match.
+Writing to hand log: ./hand_logs/match_DTREE_DTREE2_DTREE3_01_14_13_57_53_3373.txt
+Compiling bot ./players/dtree with: scons
+Output by bot DTREE will be in DTREE.dump
+Initialized DTREE on port 3000
+Compiling bot ./players/dtree with: scons
+Output by bot DTREE2 will be in DTREE2.dump
+Initialized DTREE2 on port 3001
+Compiling bot ./players/dtree with: scons
+Output by bot DTREE3 will be in DTREE3.dump
+Initialized DTREE3 on port 3002
+Shutting down player DTREE2
+Finished shutting down socket player: DTREE2
+Shutting down player DTREE
+Finished shutting down socket player: DTREE
+Shutting down player DTREE3
+Finished shutting down socket player: DTREE3
+
+Running triplicate match.
+Writing to hand log: ./hand_logs/match_DTREE_DTREE2_DTREE3_01_14_13_57_53_3374.txt
+Compiling bot ./players/dtree with: scons
+Output by bot DTREE will be in DTREE.dump
+Initialized DTREE on port 3000
+Compiling bot ./players/dtree with: scons
+Output by bot DTREE2 will be in DTREE2.dump
+Initialized DTREE2 on port 3001
+Compiling bot ./players/dtree with: scons
+Output by bot DTREE3 will be in DTREE3.dump
+Initialized DTREE3 on port 3002
+Shutting down player DTREE2
+Finished shutting down socket player: DTREE2
+Shutting down player DTREE3
+Finished shutting down socket player: DTREE3
+Shutting down player DTREE
+Finished shutting down socket player: DTREE
+
+Running triplicate match.
+Writing to hand log: ./hand_logs/match_DTREE_DTREE2_DTREE3_01_14_13_57_53_3375.txt
+Compiling bot ./players/dtree with: scons
+Output by bot DTREE will be in DTREE.dump
+Initialized DTREE on port 3000
+Compiling bot ./players/dtree with: scons
+Output by bot DTREE2 will be in DTREE2.dump
+Initialized DTREE2 on port 3001
+Compiling bot ./players/dtree with: scons
+Output by bot DTREE3 will be in DTREE3.dump
+Initialized DTREE3 on port 3002
+Shutting down player DTREE3
+Finished shutting down socket player: DTREE3
+Shutting down player DTREE
+Finished shutting down socket player: DTREE
+Shutting down player DTREE2
+Finished shutting down socket player: DTREE2
+
+Running triplicate match.
+Writing to hand log: ./hand_logs/match_DTREE_DTREE2_DTREE3_01_14_13_57_53_3376.txt
+Compiling bot ./players/dtree with: scons
+Output by bot DTREE will be in DTREE.dump
+Initialized DTREE on port 3000
+Compiling bot ./players/dtree with: scons
+Output by bot DTREE2 will be in DTREE2.dump
+Initialized DTREE2 on port 3001
+Compiling bot ./players/dtree with: scons
+Output by bot DTREE3 will be in DTREE3.dump
+Initialized DTREE3 on port 3002
+Shutting down player DTREE3
+Finished shutting down socket player: DTREE3
+Shutting down player DTREE2
+Finished shutting down socket player: DTREE2
+Shutting down player DTREE
+Finished shutting down socket player: DTREE
+Engine has finished running.

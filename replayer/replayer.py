@@ -1,7 +1,6 @@
 import argparse
 
 
-
 def create_new_game_line(p1name, p1val, p2name, p2val, p3name, p3val):
     return "NEWGAME %s %s %s 200 2 1000 10.000000" % (p1name, p2name, p3name)
 

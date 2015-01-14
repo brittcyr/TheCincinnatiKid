@@ -39,18 +39,33 @@ class Player:
             # character (\n) or your bot will hang!
             word = data.split()[0]
             if word == "GETACTION":
-                action = Player.get_action(data)
-                s.send("%s\n" % (action))
+                try:
+                    action = Player.get_action(data)
+                    s.send("%s\n" % (action))
+                except Exception as e:
+                    print 'ERROR IN THE CODE'
+                    print e
+                    s.send("CHECK\n")
+
             elif word == "REQUESTKEYVALUES":
                 # At the end, the engine will allow your bot save key/value pairs.
                 # Send FINISH to indicate you're done.
                 s.send("FINISH\n")
             elif word == "NEWGAME":
-                State.new_game(data)
+                try:
+                    State.new_game(data)
+                except:
+                    pass
             elif word == "NEWHAND":
-                State.new_hand(data)
+                try:
+                    State.new_hand(data)
+                except:
+                    pass
             elif word == "HANDOVER":
-                State.handover(data)
+                try:
+                    State.handover(data)
+                except:
+                    pass
 
         # Clean up the socket.
         s.close()

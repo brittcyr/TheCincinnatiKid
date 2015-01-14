@@ -5,6 +5,12 @@ from random import random
 
 
 PLAY_PREFLOP = .3
+SEAT1 = 1
+SEAT2 = 2
+SEAT3 = 3
+TWO_PLAYERS = 2
+THREE_PLAYERS = 3
+UTG_EXTRA = .2
 
 
 def try_to_check(legal_actions):
@@ -13,13 +19,11 @@ def try_to_check(legal_actions):
         return 'FOLD'
     return check_action[0]
 
-
 def try_to_call(legal_actions):
     call_action = [x for x in legal_actions if 'CALL' in x]
     if not call_action:
         return try_to_check(legal_actions)
     return call_action[0]
-
 
 def can_check(legal_actions):
     checking_action = [x for x in legal_actions if 'CHECK' in x]
@@ -27,7 +31,6 @@ def can_check(legal_actions):
         return True
     else:
         return False
-
 
 def split_raise(legal_actions):
     raising_action = [x for x in legal_actions if 'RAISE' in x]
@@ -37,7 +40,6 @@ def split_raise(legal_actions):
     lo = int(lo)
     hi = int(hi)
     return lo, hi
-
 
 
 
@@ -123,9 +125,8 @@ class Preflop(object):
         ############################## Case 1 ##################################
         ########################################################################
         # UTG three handed
-
-        if seat == 1 and numActivePlayers == 3 and firstRound:
-            if hand_score > (PLAY_PREFLOP - .2) / State.looseness:
+        if seat == SEAT1 and numActivePlayers == THREE_PLAYERS and firstRound:
+            if hand_score > (PLAY_PREFLOP - UTG_EXTRA) / State.looseness:
                 # Then we are going to CALL / RAISE
 
                 # This is the case where we must call and cannot raise
@@ -133,35 +134,30 @@ class Preflop(object):
                 if not raising_action: return try_to_call(legal_actions)
 
                 # Deciding to raise
-                if hand_score > .7:
-                    # We are raising if we are good enough
+                if hand_score > .75:
                     lo, hi = split_raise(legal_actions)
                     if not lo: return 'FOLD'
 
                     if hand_score < .85:
                         return 'RAISE:%d' % lo
+                    else:
+                        bet_amt = max(min(int(hand_score * hi * \
+                                State.aggressiveness), hi), lo)
+                        return 'RAISE:%d' % bet_amt
 
-                    bet_amt = max(min(int(hand_score * hi * State.aggressiveness), hi), lo)
-                    return 'RAISE:%d' % bet_amt
-
-                else:
-                    return try_to_call(legal_actions)
-
+                # Call if we don't want to raise
                 return try_to_call(legal_actions)
-
             else:
                 # Normally fold, but randomly raise. This is a big bluff
                 if random() < .02:
-                    # Randomly raise here
                     lo, hi = split_raise(legal_actions)
                     if not lo: return 'FOLD'
 
-                    bet_amt = max(min(int(random() * hi * State.aggressiveness), hi), lo)
+                    bet_amt = max(min(int(random() * hi * \
+                            State.aggressiveness), hi), lo)
                     return 'RAISE:%d' % bet_amt
                 else:
                     return 'FOLD'
-
-
 
 
 
@@ -171,7 +167,7 @@ class Preflop(object):
         # Small Blind three handed
         # TODO: fill in the logic here
 
-        if seat == 2 and numActivePlayers == 3 and firstRound:
+        if seat == SEAT2 and numActivePlayers == THREE_PLAYERS and firstRound:
             # TODO: Consider if we are facing a raise already
             if hand_score > (PLAY_PREFLOP - .05) / State.looseness:
                 # Then we are going to CALL / RAISE
@@ -220,7 +216,7 @@ class Preflop(object):
         ########################################################################
         # Big Blind three handed
         # TODO: fill in the logic here
-        if seat == 3 and numActivePlayers == 3 and firstRound:
+        if seat == SEAT3 and numActivePlayers == THREE_PLAYERS and firstRound:
             if hand_score > (PLAY_PREFLOP - .2) / State.looseness:
                 # Then we are going to CALL / RAISE
 
@@ -269,9 +265,9 @@ class Preflop(object):
         ############################## Case 4 ##################################
         ########################################################################
         # Not big blind two players
-        if numActivePlayers == 2 and firstRound and \
-                ((State.num_active == 2 and seat == 1) or
-                (State.num_active == 3 and seat == 2)):
+        if numActivePlayers == TWO_PLAYERS and firstRound and \
+                ((State.num_active == TWO_PLAYERS and seat == SEAT1) or
+                (State.num_active == THREE_PLAYERS and seat == SEAT2)):
             if hand_score > (PLAY_PREFLOP - .2) / State.looseness:
                 # Then we are going to CALL / RAISE
 
@@ -314,9 +310,9 @@ class Preflop(object):
         ########################################################################
         # Big Blind two handed
         # TODO: fill in the logic here
-        if numActivePlayers == 2 and firstRound and \
-                ((State.num_active == 2 and seat == 2) or
-                (State.num_active == 3 and seat == 3)):
+        if numActivePlayers == TWO_PLAYERS and firstRound and \
+                ((State.num_active == TWO_PLAYERS and seat == SEAT2) or
+                (State.num_active == THREE_PLAYERS and seat == SEAT3)):
             # TODO: Consider if we are facing a raise already
             if hand_score > PLAY_PREFLOP / State.looseness:
                 # Then we are going to CALL / RAISE
@@ -376,7 +372,7 @@ class Preflop(object):
             pot_odds = float(call_amt) / (2 * call_amt + potSize)
 
             # If we only called and do not have a great hand, reduce our odds
-            if numActivePlayers == 3: hand_score = hand_score * hand_score
+            if numActivePlayers == THREE_PLAYERS: hand_score = hand_score * hand_score
 
             if pot_odds < hand_score:
                 return call_action
@@ -401,7 +397,7 @@ class Preflop(object):
             pot_odds = float(call_amt) / (2 * call_amt + potSize)
 
             # If we only called and do not have a great hand, reduce our odds
-            if numActivePlayers == 3: hand_score = hand_score * hand_score
+            if numActivePlayers == THREE_PLAYERS: hand_score = hand_score * hand_score
 
             if pot_odds < hand_score:
                 return try_to_call(legal_actions)
