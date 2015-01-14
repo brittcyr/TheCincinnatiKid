@@ -1,3 +1,7 @@
+import argparse
+
+
+
 def create_new_game_line(p1name, p1val, p2name, p2val, p3name, p3val):
     return "NEWGAME %s %s %s 200 2 1000 10.000000" % (p1name, p2name, p3name)
 
@@ -197,4 +201,7 @@ def parse_deal_line(deal_line):
     return action, cards
 
 if __name__ == '__main__':
-    parse_file('hand', 'DTREE')
+    parser = argparse.ArgumentParser(description='GETACTION reconstructor.', add_help=False, prog='pokerbot')
+    parser.add_argument('-h', dest='hero', type=str, default='DTREE', help='HERO name')
+    args = parser.parse_args()
+    parse_file('hand', args.hero)
