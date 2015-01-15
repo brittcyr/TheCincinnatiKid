@@ -68,13 +68,14 @@ if __name__ == '__main__':
             scores[second] -= 20
             scores[loser] -= 80
             wins[winner] += 1
-            seconds[secons] += 1
+            seconds[second] += 1
             lasts[loser] += 1
 
         print 'Finished %d sets of triplicate' % (iteration + 1)
 
-    f = open('../results.html', 'w')
-html = """
+        f = open('../results.html', 'w')
+        html = """
+<html>
 <head>
 <style>
 table, th, td {
@@ -96,15 +97,15 @@ th, td {
       <th>Score</th>
     </tr>
 """
-    f.write(html)
-    for score in sorted(scores.keys()):
-        print '%s:\t%d' % (score, scores[score])
-        f.write(
+        f.write(html)
+        for score in sorted(scores.keys()):
+            print '%s:\t%d' % (score, scores[score])
+            f.write(
         "<tr><td>%s</td><td>%d</td><td>%d</td><td>%d</td><td>%d</td></tr>\n" \
-            % (score, wins[score], seconds[score], lasts[score], scores[score])
+            % (score, wins[score], seconds[score], lasts[score], scores[score]))
 
-    f.write("</table></body></html>")
-    f.close()
+        f.write("</table></body></html>")
+        f.close()
 
 
     # Cleanup the scons and sql
