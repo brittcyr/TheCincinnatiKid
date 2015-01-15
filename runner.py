@@ -128,7 +128,6 @@ th, td {
       <th>Total</th>
       <th>Score</th>
       <th>Mean</th>
-      <th>Std Dev</th>
     </tr>
 """
         f.write(html)
@@ -136,17 +135,12 @@ th, td {
             print '%s:\t%d' % (score, scores[score])
             count = sum([wins[score], seconds[score], lasts[score]])
             mean = float(scores[score]) / count
-            stddev = math.sqrt(( \
-                    wins[score] * (100 - mean)**2 +
-                    seconds[score] * (-20 - mean)**2 +
-                    lasts[score] * (-80- mean)**2
-                    ) / count)
             f.write(
         "<tr><td>%s</td><td>%d</td><td>%d</td><td>%d</td><td>%d</td>" \
             % (score, wins[score], seconds[score], lasts[score], count))
             f.write(
-        "<td>%d</td><td>%f</td><td>%f</td></tr>\n" \
-            % (scores[score], mean, stddev))
+        "<td>%d</td><td>%f</td></tr>\n" \
+            % (scores[score], mean))
 
         f.write("</table></body></html>")
         f.close()
