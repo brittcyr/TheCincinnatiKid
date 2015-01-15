@@ -156,7 +156,6 @@ class Preflop(object):
 
 
 
-
         ############################## Case 2 ##################################
         ########################################################################
         # Small Blind three handed
@@ -193,8 +192,6 @@ class Preflop(object):
                     return 'RAISE:%d' % bet_amt
                 else:
                     return 'FOLD'
-
-
 
 
 
@@ -239,7 +236,6 @@ class Preflop(object):
 
 
 
-        ########################################################################
         ############################## Case 4 ##################################
         ########################################################################
         # Not big blind two players
@@ -273,10 +269,6 @@ class Preflop(object):
                     return 'RAISE:%d' % bet_amt
                 else:
                     return 'FOLD'
-
-
-
-
 
 
 
@@ -355,6 +347,4 @@ class Preflop(object):
 
             return try_to_call(legal_actions) if pot_odds < hand_score else 'FOLD'
 
-
-        # Fall through that should not be used
         return 'CHECK'
