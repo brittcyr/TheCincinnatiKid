@@ -109,6 +109,9 @@ class Flop(object):
         #######################################################################
         # Nobody else has bet
         if any([x for x in legal_actions if 'CHECK' in x]):
+            lo, hi = split_raise(legal_actions)
+            if not lo: return 'CHECK'
+
             # We bet if we have more than a pair
             if score[0] > PAIR and quick_check_if_hole_helps(score, board_cards):
                 bet_prob = 1
@@ -119,7 +122,6 @@ class Flop(object):
                 bet_prob = max(State.hole_cards) / 4 * .02
 
             if random() < bet_prob:
-                lo, hi = split_raise(legal_actions)
                 if score[0] >= STRAIGHT:
                     return 'BET:%d' % hi
 
@@ -138,9 +140,6 @@ class Flop(object):
                 # Bluff at scary board
                 if max(flush_correlation(board_cards), straight_correlation(board_cards)) >= 3:
                     if random() > BLUFF_AT_SCARY_BOARD:
-                        lo, hi = split_raise(legal_actions)
-                        if not lo: return 'CHECK'
-
                         bet_amt = max(min(int(2 * lo * State.aggressiveness), hi), lo)
                         return 'BET:%d' % bet_amt
 

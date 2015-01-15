@@ -24,6 +24,8 @@ BB_EXTRA = .1
 BB_RAISE = .7
 BB_BIG_BET = .85
 BB_MAX_RAISE_3H = .95
+BB_RAISE_3H = .85
+BB_RANDOM_BET = .02
 
 def try_to_check(legal_actions):
     check_action = [x for x in legal_actions if 'CHECK' in x]
@@ -200,10 +202,6 @@ class Preflop(object):
         # Big Blind three handed
         if seat == SEAT3 and numActivePlayers == THREE_PLAYERS and firstRound:
             if hand_score > (PLAY_PREFLOP - BB_EXTRA) / State.looseness:
-                # This is the case where we must call and cannot raise
-                raising_action = [x for x in legal_actions if 'RAISE' in x]
-                if len(raising_action) == 0: return try_to_call(legal_actions)
-
                 lo, hi = split_raise(legal_actions)
                 if not lo: return try_to_call(legal_actions)
 
@@ -212,11 +210,7 @@ class Preflop(object):
                     return 'RAISE:%d' % hi
 
                 # If hand is good and no previous raises
-                if hand_score > .85 and not any([x for x in prev_actions if 'RAISE' in x]):
-
-                    if hand_score < .9:
-                        return 'RAISE:%d' % lo
-
+                if hand_score > BB_RAISE_3H and [x for x in prev_actions if 'RAISE' in x]:
                     # Otherwise a bigger raise
                     bet_amt = max(min(int(random() * hand_score * \
                             hi * State.aggressiveness), hi), lo)
@@ -226,7 +220,7 @@ class Preflop(object):
 
             else:
                 # Normally check/fold, but randomly raise when we cannot check
-                if random() < .02 and not can_check(legal_actions):
+                if random() < BB_RANDOM_BET and not can_check(legal_actions):
                     # Randomly raise here
                     lo, hi = split_raise(legal_actions)
                     if not lo: return try_to_check(legal_actions)
@@ -290,10 +284,9 @@ class Preflop(object):
                 # Deciding to raise
                 if hand_score > BB_RAISE:
                     lo, hi = split_raise(legal_actions)
-                    if not lo: return 'FOLD'
+                    if not lo: return try_to_call(legal_actions)
 
-                    if hand_score < BB_BIG_BET:
-                        return 'RAISE:%d' % lo
+                    if hand_score < BB_BIG_BET: return 'RAISE:%d' % lo
 
                     bet_amt = max(min(int(hand_score * hi * State.aggressiveness), hi), lo)
                     return 'RAISE:%d' % bet_amt
@@ -325,7 +318,7 @@ class Preflop(object):
             pot_odds = float(call_amt) / (2 * call_amt + potSize)
 
             # If we only called and do not have a great hand, reduce our odds
-            if numActivePlayers == THREE_PLAYERS: hand_score = hand_score * hand_score
+            if numActivePlayers == THREE_PLAYERS: hand_score = hand_score ** 2
 
             return call_action[0] if pot_odds < hand_score else 'FOLD'
 
@@ -343,7 +336,7 @@ class Preflop(object):
             pot_odds = float(call_amt) / (2 * call_amt + potSize)
 
             # If we only called and do not have a great hand, reduce our odds
-            if numActivePlayers == THREE_PLAYERS: hand_score = hand_score * hand_score
+            if numActivePlayers == THREE_PLAYERS: hand_score = hand_score ** 2
 
             return try_to_call(legal_actions) if pot_odds < hand_score else 'FOLD'
 
