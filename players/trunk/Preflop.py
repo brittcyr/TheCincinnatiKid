@@ -23,6 +23,7 @@ SB_MAX_RAISE = .95
 BB_EXTRA = .1
 BB_RAISE = .7
 BB_BIG_BET = .85
+BB_MAX_RAISE_3H = .95
 
 def try_to_check(legal_actions):
     check_action = [x for x in legal_actions if 'CHECK' in x]
@@ -104,17 +105,10 @@ class Preflop(object):
         #   3 PLAYERS
         #     UTG               1
         #     SMALL             2
-        #       RAISED
-        #       CALLED
         #     BIG BLIND         3
-        #       RAISED
-        #       2 RAISED
-        #       CALLED
         #   2 PLAYERS
         #     FIRST             4
         #     SECOND            5
-        #       RAISED
-        #       CALLED
         # SECOND TIME AROUND
         #   CALLED LAST TIME    6
         #   RAISED LAST TIME    7
@@ -217,9 +211,8 @@ class Preflop(object):
                 if not lo: return try_to_call(legal_actions)
 
                 # Deciding to raise if hand is great
-                if hand_score > .95:
-                    bet_amt = max(min(int(hand_score * hi * State.aggressiveness), hi), lo)
-                    return 'RAISE:%d' % bet_amt
+                if hand_score > BB_MAX_RAISE_3H:
+                    return 'RAISE:%d' % hi
 
                 # If hand is good and no previous raises
                 if hand_score > .85 and not any([x for x in prev_actions if 'RAISE' in x]):
@@ -246,10 +239,7 @@ class Preflop(object):
 
 
 
-
-
-
-
+        ########################################################################
         ############################## Case 4 ##################################
         ########################################################################
         # Not big blind two players
@@ -331,8 +321,6 @@ class Preflop(object):
 
 
 
-
-
         ############################## Case 6 ##################################
         ########################################################################
         # Second round and we called last time
@@ -340,17 +328,14 @@ class Preflop(object):
             # Play the pot odds
             call_action = [x for x in legal_actions if 'CALL' in x]
             if not call_action: return 'CHECK'
-            call_action = call_action[0]
 
-            call_amt = int(call_action.split(':')[-1])
+            call_amt = int(call_action[0].split(':')[-1])
             pot_odds = float(call_amt) / (2 * call_amt + potSize)
 
             # If we only called and do not have a great hand, reduce our odds
             if numActivePlayers == THREE_PLAYERS: hand_score = hand_score * hand_score
 
-            return call_action if pot_odds < hand_score else 'FOLD'
-
-
+            return call_action[0] if pot_odds < hand_score else 'FOLD'
 
 
 
@@ -361,9 +346,8 @@ class Preflop(object):
             # Play the pot odds
             call_action = [x for x in legal_actions if 'CALL' in x]
             if not call_action: return 'CHECK'
-            call_action = call_action[0]
 
-            call_amt = int(call_action.split(':')[-1])
+            call_amt = int(call_action[0].split(':')[-1])
             pot_odds = float(call_amt) / (2 * call_amt + potSize)
 
             # If we only called and do not have a great hand, reduce our odds

@@ -45,7 +45,7 @@ def count_drawing_outs(hole, board):
 
 
 VAL_OF_OUT = .02127 # 1 / 47
-PAIR_ODDS = {0: .1, 1: .2, 2: .4, 3: .6, 4: .7, 5: .9, 6: 1.0}
+PAIR_ODDS = {0: .1, 1: .2, 2: .4, 3: .6, 4: .7, 5: .9, 6: 1.0, -1: 0}
 HIGH_CARD = 0
 PAIR = 1
 TWO_PAIR = 2
@@ -105,24 +105,18 @@ class Flop(object):
         # CALL / FOLD / RAISE   2
 
 
+        ############################ Case 1 ###################################
         #######################################################################
-        # Case 1
-        #######################################################################
-        # Nobody else has acted
+        # Nobody else has bet
         if any([x for x in legal_actions if 'CHECK' in x]):
-            bet_prob = 0
-
             # We bet if we have more than a pair
             if score[0] > PAIR and quick_check_if_hole_helps(score, board_cards):
                 bet_prob = 1
             elif score[0] == PAIR and quick_check_if_hole_helps(score, board_cards):
-                val = classify_pair_flop(board_cards, score)
-                bet_prob = PAIR_ODDS[val]
-            elif score[0] == HIGH_CARD:
-                bet_prob += max(State.hole_cards) / 4 * .02
+                bet_prob = PAIR_ODDS[classify_pair_flop(board_cards, score)]
             else:
-                # This is our kicker to a pair on the board
-                bet_prob = max(State.hole_cards) / 4 * .01
+                # This is our kicker to a pair on the board or just high card
+                bet_prob = max(State.hole_cards) / 4 * .02
 
             if random() < bet_prob:
                 lo, hi = split_raise(legal_actions)
@@ -133,8 +127,9 @@ class Flop(object):
                     bet_amt = max(min(int((.25 + random()) * hi * State.aggressiveness), hi), lo)
                     return 'BET:%d' % bet_amt
 
-                # Do not randomly bet a pair against a paired board
-                if score[0] >= PAIR and quick_check_if_hole_helps(score, board_cards):
+                # Bet for at least middle pair
+                if score[0] >= PAIR and quick_check_if_hole_helps(score, board_cards) and \
+                        classify_pair_flop(board_cards, score) >= 3:
                     bet_amt = max(min(int(bet_prob * hi * State.aggressiveness), hi), lo)
                     return 'BET:%d' % bet_amt
 
@@ -145,13 +140,15 @@ class Flop(object):
                     if random() > BLUFF_AT_SCARY_BOARD:
                         lo, hi = split_raise(legal_actions)
                         if not lo: return 'CHECK'
-                        return 'BET:%d' % lo
+
+                        bet_amt = max(min(int(2 * lo * State.aggressiveness), hi), lo)
+                        return 'BET:%d' % bet_amt
 
                 return 'CHECK'
 
 
         #######################################################################
-        # Case 2
+        ############################ Case 2 ###################################
         #######################################################################
         # Need to decide if we should FOLD / CALL / RAISE
         if any([x for x in legal_actions if 'CALL' in x]):
