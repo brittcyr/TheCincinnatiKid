@@ -1,4 +1,5 @@
 from lib.hand_eval import convert_string_to_int, score_best_five, eval_hand
+from lib.board_correlation import straight_correlation, flush_correlation
 from Global import State
 from random import random
 
@@ -152,6 +153,13 @@ class Flop(object):
 
                 return 'BET:%d' % lo
             else:
+                # Bluff at scary board
+                if max(flush_correlation(board_cards), straight_correlation(board_cards)) >= 3:
+                    if random() > BLUFF_AT_SCARY_BOARD:
+                        lo, hi = split_raise(legal_actions)
+                        if not lo: return 'CHECK'
+                        return 'BET:%d' % lo
+
                 return 'CHECK'
 
 
@@ -183,6 +191,10 @@ class Flop(object):
                 elif score[0] == TWO_PAIR:
                     guessed_win_prob += .7
                     guessed_win_prob += .05 * score[1]
+
+                # Drop our odds if there is a scary board
+                if max(flush_correlation(board_cards), straight_correlation(board_cards)) >= 3:
+                    guessed_win_prob *= .5
 
                 # Consider draws as good
                 guessed_win_prob = max(guessed_win_prob, \
