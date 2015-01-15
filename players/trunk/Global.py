@@ -34,7 +34,7 @@ class State(object):
 
         # If we should CHECK/FOLD, then just adjust the looseness
         check_to_lost_amt = (cls.num_hands - cls.handId) * ((int(cls.bb) * 3 / 2) + 1)
-        if check_to_lost_amt < cls.stackSize - rest:
+        if 2 * check_to_lost_amt < cls.stackSize - rest:
             cls.check_fold_to_win = True
             cls.aggressiveness = 0.0
             cls.looseness = 0.0

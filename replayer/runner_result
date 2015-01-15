@@ -9,80 +9,80 @@ Running engine with parameters:
     CONNECTION_TIMEOUT=2    ENFORCE_TIMING_RESTRICTION=true
     NUMBER_OF_HANDS=1000    TIME_RESTRICTION_PER_GAME=10.000
     DISPLAY_ILLEGAL_ACTIONS=true
-Writing to hand log: ./hand_logs/match_RANDOM_trunk_check_fold_01_15_15_24_39_350.txt
-Compiling bot ./players/trunk with: scons
-Output by bot trunk will be in trunk.dump
-Initialized trunk on port 3000
+Writing to hand log: ./hand_logs/match_check_fold_trunk_RANDOM_01_15_18_50_38_532.txt
 Compiling bot ./players/check_fold with: scons
 Output by bot check_fold will be in check_fold.dump
-Initialized check_fold on port 3001
-Shutting down player trunk
-Finished shutting down socket player: trunk
-Shutting down player check_fold
-Finished shutting down socket player: check_fold
-
-Running triplicate match.
-Writing to hand log: ./hand_logs/match_RANDOM_trunk_check_fold_01_15_15_24_39_3502.txt
+Initialized check_fold on port 3000
 Compiling bot ./players/trunk with: scons
 Output by bot trunk will be in trunk.dump
-Initialized trunk on port 3000
-Compiling bot ./players/check_fold with: scons
-Output by bot check_fold will be in check_fold.dump
-Initialized check_fold on port 3001
+Initialized trunk on port 3001
 Shutting down player check_fold
 Finished shutting down socket player: check_fold
 Shutting down player trunk
 Finished shutting down socket player: trunk
 
 Running triplicate match.
-Writing to hand log: ./hand_logs/match_RANDOM_trunk_check_fold_01_15_15_24_39_3503.txt
-Compiling bot ./players/trunk with: scons
-Output by bot trunk will be in trunk.dump
-Initialized trunk on port 3000
+Writing to hand log: ./hand_logs/match_check_fold_trunk_RANDOM_01_15_18_50_38_5322.txt
 Compiling bot ./players/check_fold with: scons
 Output by bot check_fold will be in check_fold.dump
-Initialized check_fold on port 3001
-Shutting down player trunk
-Finished shutting down socket player: trunk
-Shutting down player check_fold
-Finished shutting down socket player: check_fold
-
-Running triplicate match.
-Writing to hand log: ./hand_logs/match_RANDOM_trunk_check_fold_01_15_15_24_39_3504.txt
+Initialized check_fold on port 3000
 Compiling bot ./players/trunk with: scons
 Output by bot trunk will be in trunk.dump
-Initialized trunk on port 3000
-Compiling bot ./players/check_fold with: scons
-Output by bot check_fold will be in check_fold.dump
-Initialized check_fold on port 3001
-Shutting down player trunk
-Finished shutting down socket player: trunk
-Shutting down player check_fold
-Finished shutting down socket player: check_fold
-
-Running triplicate match.
-Writing to hand log: ./hand_logs/match_RANDOM_trunk_check_fold_01_15_15_24_39_3505.txt
-Compiling bot ./players/trunk with: scons
-Output by bot trunk will be in trunk.dump
-Initialized trunk on port 3000
-Compiling bot ./players/check_fold with: scons
-Output by bot check_fold will be in check_fold.dump
-Initialized check_fold on port 3001
+Initialized trunk on port 3001
 Shutting down player check_fold
 Finished shutting down socket player: check_fold
 Shutting down player trunk
 Finished shutting down socket player: trunk
 
 Running triplicate match.
-Writing to hand log: ./hand_logs/match_RANDOM_trunk_check_fold_01_15_15_24_39_3506.txt
-Compiling bot ./players/trunk with: scons
-Output by bot trunk will be in trunk.dump
-Initialized trunk on port 3000
+Writing to hand log: ./hand_logs/match_check_fold_trunk_RANDOM_01_15_18_50_38_5323.txt
 Compiling bot ./players/check_fold with: scons
 Output by bot check_fold will be in check_fold.dump
-Initialized check_fold on port 3001
+Initialized check_fold on port 3000
+Compiling bot ./players/trunk with: scons
+Output by bot trunk will be in trunk.dump
+Initialized trunk on port 3001
+Shutting down player trunk
+Finished shutting down socket player: trunk
+Shutting down player check_fold
+Finished shutting down socket player: check_fold
+
+Running triplicate match.
+Writing to hand log: ./hand_logs/match_check_fold_trunk_RANDOM_01_15_18_50_38_5324.txt
+Compiling bot ./players/check_fold with: scons
+Output by bot check_fold will be in check_fold.dump
+Initialized check_fold on port 3000
+Compiling bot ./players/trunk with: scons
+Output by bot trunk will be in trunk.dump
+Initialized trunk on port 3001
+Shutting down player trunk
+Finished shutting down socket player: trunk
+Shutting down player check_fold
+Finished shutting down socket player: check_fold
+
+Running triplicate match.
+Writing to hand log: ./hand_logs/match_check_fold_trunk_RANDOM_01_15_18_50_38_5325.txt
+Compiling bot ./players/check_fold with: scons
+Output by bot check_fold will be in check_fold.dump
+Initialized check_fold on port 3000
+Compiling bot ./players/trunk with: scons
+Output by bot trunk will be in trunk.dump
+Initialized trunk on port 3001
 Shutting down player check_fold
 Finished shutting down socket player: check_fold
 Shutting down player trunk
 Finished shutting down socket player: trunk
+
+Running triplicate match.
+Writing to hand log: ./hand_logs/match_check_fold_trunk_RANDOM_01_15_18_50_38_5326.txt
+Compiling bot ./players/check_fold with: scons
+Output by bot check_fold will be in check_fold.dump
+Initialized check_fold on port 3000
+Compiling bot ./players/trunk with: scons
+Output by bot trunk will be in trunk.dump
+Initialized trunk on port 3001
+Shutting down player trunk
+Finished shutting down socket player: trunk
+Shutting down player check_fold
+Finished shutting down socket player: check_fold
 Engine has finished running.
