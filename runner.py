@@ -17,7 +17,7 @@ if __name__ == '__main__':
     seconds = {}
     lasts = {}
 
-    for iteration in range(args.times):
+    for iteration in xrange(args.times):
         new_dirs = [x for x in os.listdir("players") if os.path.isdir("players/" + x)]
         if new_dirs != dirs:
             dirs = new_dirs
