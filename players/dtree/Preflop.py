@@ -94,7 +94,6 @@ class Preflop(object):
 
         # These are the variables based on position
         seat = State.seat
-        numActivePlayers = numActivePlayers
         firstRound = any([x for x in prev_actions if 'POST' in x])
         i_called = True if prev_actions and 'CALL' in prev_actions[0] else False
 
@@ -120,7 +119,6 @@ class Preflop(object):
 
         hand_classify = classify_hole(State.hole_cards[0], State.hole_cards[1])
         hand_score = HoleScorer.score_hole(hand_classify, numActivePlayers)
-
 
 
         ############################## Case 1 ##################################
@@ -236,7 +234,7 @@ class Preflop(object):
 
             else:
                 # Normally check/fold, but randomly raise when we cannot check
-                if random() < .1 and not can_check(legal_actions):
+                if random() < .02 and not can_check(legal_actions):
                     # Randomly raise here
                     lo, hi = split_raise(legal_actions)
                     if not lo: return try_to_check(legal_actions)

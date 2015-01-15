@@ -70,35 +70,35 @@ class Flop(object):
         score = score_best_five(board_cards + State.hole_cards)
 
 
-        # The logic will be to consider the probability that we win and compute
-        # First the pot odd, then the implied odds, then the fold equity
-
-        # CHECK / BET
-        # CALL / FOLD / RAISE
-
+        # CHECK / BET           1
+        # CALL / FOLD / RAISE   2
 
 
         # Case 1
         #######################################################################
         # Nobody else has acted
-
         # TODO: consider fold equity for betting and reverse pot odds
         if any([x for x in legal_actions if 'CHECK' in x]):
-            # Determine if we should show strength and how much
-
             # If we have a hand, then bet, if we don't then do not
             bet_prob = 0
 
             # We bet if we have more than a pair
-            if score[0] > 1:
+            if score[0] > 1 and quick_check_if_hole_helps(score, board_cards):
                 bet_prob = 1
-            elif score[0] == 1:
+            elif score[0] == 1 and quick_check_if_hole_helps(score, board_cards):
                 val_of_pair = score[1]
                 # val_of_pair goes from 0 - 12
                 bet_prob += .28
                 bet_prob += val_of_pair * .03
             elif score[0] == 0:
                 bet_prob += score[1][0] * .01
+            else:
+                # This is our kicker to a pair on the board
+                bet_prob = State.hole_cards[0] / 4 * .01
+
+            # Do not bet if we do not beat the board
+            if not quick_check_if_hole_helps(score, board_cards):
+                guessed_win_prob = .1
 
             if random() < bet_prob:
                 lo, hi = split_raise(legal_actions)

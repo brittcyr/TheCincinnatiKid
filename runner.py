@@ -9,6 +9,10 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     scores = {}
+    wins = {}
+    seconds = {}
+    lasts = {}
+
     for iteration in range(args.times):
         # What we want is to run the script
         results = subprocess.Popen(["java", "-jar", "engine_1.4.jar"], stdout=subprocess.PIPE)
@@ -41,21 +45,65 @@ if __name__ == '__main__':
             game_result = sorted(last_result, key=lambda x: x[1], reverse=True)
             game_results.append(game_result)
 
-        if p1name.strip() not in scores: scores[p1name.strip()] = 0
-        if p2name.strip() not in scores: scores[p2name.strip()] = 0
-        if p3name.strip() not in scores: scores[p3name.strip()] = 0
+        if p1name.strip() not in scores:
+            scores[p1name.strip()] = 0
+            wins[p1name.strip()] = 0
+            seconds[p1name.strip()] = 0
+            lasts[p1name.strip()] = 0
+
+        if p2name.strip() not in scores:
+            scores[p2name.strip()] = 0
+            wins[p2name.strip()] = 0
+            seconds[p2name.strip()] = 0
+            lasts[p2name.strip()] = 0
+
+        if p3name.strip() not in scores:
+            scores[p3name.strip()] = 0
+            wins[p3name.strip()] = 0
+            seconds[p3name.strip()] = 0
+            lasts[p3name.strip()] = 0
 
         for [(winner, _), (second, _), (loser, _)] in game_results:
             scores[winner] += 100
             scores[second] -= 20
             scores[loser] -= 80
+            wins[winner] += 1
+            seconds[secons] += 1
+            lasts[loser] += 1
 
         print 'Finished %d sets of triplicate' % (iteration + 1)
 
-    f = open('results.html', 'w')
+    f = open('../results.html', 'w')
+html = """
+<head>
+<style>
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+th, td {
+    padding: 5px;
+}
+</style>
+</head>
+<body>
+  <table style="width:100%">
+    <tr>
+      <th>Name</th>
+      <th>Wins</th>
+      <th>Seconds</th>
+      <th>Losses</th>
+      <th>Score</th>
+    </tr>
+"""
+    f.write(html)
     for score in sorted(scores.keys()):
         print '%s:\t%d' % (score, scores[score])
-        f.write('%s:\t%d\n' % (score, scores[score]))
+        f.write(
+        "<tr><td>%s</td><td>%d</td><td>%d</td><td>%d</td><td>%d</td></tr>\n" \
+            % (score, wins[score], seconds[score], lasts[score], scores[score])
+
+    f.write("</table></body></html>")
     f.close()
 
 
