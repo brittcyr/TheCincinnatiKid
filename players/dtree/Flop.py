@@ -25,28 +25,20 @@ def split_raise(legal_actions):
 
 def classify_pair_flop(board, score):
     board = sorted([x / 4 for x in board])
-    if score[1] < board[0]:
-        return 0
-    if score[1] == board[0]:
-        return 1
-    if score[1] > board[0] and score[1] < board[1]:
-        return 2
-    if score[1] == board[1]:
-        return 3
-    if score[1] > board[1] and score[1] < board[2]:
-        return 4
-    if score[1] == board[2]:
-        return 5
-    if score[1] > board[1] and score[1] < board[2]:
-        return 6
+    if score[1] < board[0]: return 0
+    if score[1] == board[0]: return 1
+    if score[1] > board[0] and score[1] < board[1]: return 2
+    if score[1] == board[1]: return 3
+    if score[1] > board[1] and score[1] < board[2]: return 4
+    if score[1] == board[2]: return 5
+    if score[1] > board[1] and score[1] < board[2]: return 6
     return -1
 
 DECK = 52
 def count_drawing_outs(hole, board):
     outs = 0
     for card in range(DECK):
-        if card in hole or card in board:
-            continue
+        if card in hole or card in board: continue
         if score_best_five(hole + board + [card]) >= THREE_OF_A_KIND:
             outs += 1
     return outs
@@ -107,8 +99,6 @@ class Flop(object):
 
 
         # These are the variables based on position
-        seat = State.seat
-        numActivePlayers = numActivePlayers
         score = score_best_five(board_cards + State.hole_cards)
 
 
@@ -120,7 +110,6 @@ class Flop(object):
         # Case 1
         #######################################################################
         # Nobody else has acted
-        # TODO: consider fold equity for betting and reverse pot odds
         if any([x for x in legal_actions if 'CHECK' in x]):
             bet_prob = 0
 
@@ -166,8 +155,6 @@ class Flop(object):
         # Case 2
         #######################################################################
         # Need to decide if we should FOLD / CALL / RAISE
-        # TODO: Consider if we are facing multiple bets. Tune this
-
         if any([x for x in legal_actions if 'CALL' in x]):
             # Compute pot odds
             call_action = [x for x in legal_actions if 'CALL' in x][0]
@@ -198,7 +185,7 @@ class Flop(object):
 
                 # Consider draws as good
                 guessed_win_prob = max(guessed_win_prob, \
-                        VAL_OF_OUT * count_drawing_outs(hole, board))
+                        VAL_OF_OUT * count_drawing_outs(State.hole_cards, board_cards))
 
                 if pot_odds < guessed_win_prob:
                     prev_bets = [x for x in prev_actions if 'RAISE' in x or 'BET' in x]
@@ -225,7 +212,7 @@ class Flop(object):
                 bet_amt = max(min(int(score[1] * .9 * hi * State.aggressiveness), hi), lo)
                 return 'RAISE:%d' % bet_amt
 
-            if score[0] == THREE_OF_A_KIND and quick_check_if_hole_helps(score, board):
+            if score[0] == THREE_OF_A_KIND and quick_check_if_hole_helps(score, board_cards):
                 bet_amt = max(min(int(random() * hi * State.aggressiveness), hi), lo)
                 return 'RAISE:%d' % bet_amt
 

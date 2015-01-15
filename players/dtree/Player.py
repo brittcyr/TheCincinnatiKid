@@ -1,6 +1,7 @@
 import argparse
 import socket
 import sys
+import traceback
 from Global import State
 from Preflop import Preflop
 from Flop import Flop
@@ -45,6 +46,7 @@ class Player:
                 except Exception as e:
                     print 'ERROR IN THE CODE'
                     print e
+                    print traceback.format_exc()
                     s.send("CHECK\n")
 
             elif word == "REQUESTKEYVALUES":
