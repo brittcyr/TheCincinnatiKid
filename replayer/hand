@@ -1,23 +1,26 @@
-Hand #24, DTREE (533), RANDOM3 (67), DTREE2 (0)
-DTREE posts the blind of 1
-RANDOM3 posts the blind of 2
-Dealt to DTREE2 [8s 8d]
-Dealt to DTREE [9h Ac]
-Dealt to RANDOM3 [Qs 6h]
-DTREE calls 2
-RANDOM3 raises to 4
-DTREE calls 4
-*** FLOP *** (8) [Ah Th 3h]
-RANDOM3 bets 4
-DTREE raises to 14
-RANDOM3 raises to 45
-DTREE calls 45
-*** TURN *** (98) [Ah Th 3h] [As]
-RANDOM3 bets 10
-DTREE calls 10
-*** RIVER *** (118) [Ah Th 3h As] [5h]
-RANDOM3 bets 7
-DTREE calls 7
-DTREE shows [9h Ac]
-RANDOM3 shows [Qs 6h]
-DTREE wins the pot (132)
+Hand #6, trunk (174), RANDOM (230), check_fold (196)
+RANDOM posts the blind of 1
+check_fold posts the blind of 2
+Dealt to trunk [7d Th]
+Dealt to RANDOM [Jh Qh]
+Dealt to check_fold [8h Kd]
+trunk raises to 6
+RANDOM raises to 15
+### ILLEGAL ACTION: Check [player=check_fold]
+check_fold folds
+trunk calls 15
+*** FLOP *** (32) [5s 3s 5d]
+RANDOM bets 12
+trunk raises to 24
+RANDOM raises to 102
+trunk calls 102
+*** TURN *** (236) [5s 3s 5d] [9c]
+RANDOM bets 10
+trunk raises to 25
+RANDOM calls 25
+*** RIVER *** (286) [5s 3s 5d 9c] [Kc]
+RANDOM checks
+trunk checks
+trunk shows [7d Th]
+RANDOM shows [Jh Qh]
+RANDOM wins the pot (286)

@@ -133,7 +133,8 @@ class Flop(object):
                     bet_amt = max(min(int((.25 + random()) * hi * State.aggressiveness), hi), lo)
                     return 'BET:%d' % bet_amt
 
-                if score[0] >= PAIR:
+                # Do not randomly bet a pair against a paired board
+                if score[0] >= PAIR and quick_check_if_hole_helps(score, board_cards):
                     bet_amt = max(min(int(bet_prob * hi * State.aggressiveness), hi), lo)
                     return 'BET:%d' % bet_amt
 
@@ -149,6 +150,7 @@ class Flop(object):
                 return 'CHECK'
 
 
+        #######################################################################
         # Case 2
         #######################################################################
         # Need to decide if we should FOLD / CALL / RAISE
@@ -156,7 +158,6 @@ class Flop(object):
             # Compute pot odds
             call_action = [x for x in legal_actions if 'CALL' in x][0]
             call_amt = int(call_action.split(':')[-1])
-            pot_size = potSize
 
             pot_odds = float(call_amt) / (2 * call_amt + potSize)
 
@@ -170,6 +171,8 @@ class Flop(object):
                 if score[0] == PAIR:
                     val = classify_pair_flop(board_cards, score)
                     guessed_win_prob += PAIR_ODDS[val]
+                    if not quick_check_if_hole_helps(score, board_cards):
+                        guessed_win_prob *= .5
 
                 # TWO PAIR
                 elif score[0] == TWO_PAIR:
