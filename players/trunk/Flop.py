@@ -97,7 +97,6 @@ class Flop(object):
 
         State.timebank = float(data.pop(0))
 
-
         # These are the variables based on position
         score = score_best_five(board_cards + State.hole_cards)
 
@@ -120,7 +119,7 @@ class Flop(object):
                 val = classify_pair_flop(board_cards, score)
                 bet_prob = PAIR_ODDS[val]
             elif score[0] == HIGH_CARD:
-                bet_prob += score[1][0] * .02
+                bet_prob += max(State.hole_cards) / 4 * .02
             else:
                 # This is our kicker to a pair on the board
                 bet_prob = max(State.hole_cards) / 4 * .01
@@ -128,9 +127,7 @@ class Flop(object):
             if random() < bet_prob:
                 lo, hi = split_raise(legal_actions)
                 if score[0] >= STRAIGHT:
-                    # Max bet with a straight or better
-                    bet_amt = hi
-                    return 'BET:%d' % bet_amt
+                    return 'BET:%d' % hi
 
                 if score[0] >= TWO_PAIR:
                     bet_amt = max(min(int((.25 + random()) * hi * State.aggressiveness), hi), lo)

@@ -203,6 +203,6 @@ def parse_deal_line(deal_line):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='GETACTION reconstructor.', add_help=False, prog='pokerbot')
-    parser.add_argument('-h', dest='hero', type=str, default='DTREE', help='HERO name')
+    parser.add_argument('-h', dest='hero', type=str, default='HERO', help='HERO name')
     args = parser.parse_args()
     parse_file('hand', args.hero)
