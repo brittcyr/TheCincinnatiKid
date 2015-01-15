@@ -52,16 +52,19 @@ if __name__ == '__main__':
 
         print 'Finished %d sets of triplicate' % (iteration + 1)
 
+    f = open('results.html', 'w')
     for score in sorted(scores.keys()):
         print '%s:\t%d' % (score, scores[score])
+        f.write('%s:\t%d\n' % (score, scores[score]))
+    f.close()
 
 
     # Cleanup the scons and sql
     results = subprocess.Popen(["rm", "scons.dump"])
     results = subprocess.Popen(["rm", "sqlite.db"])
-    results = subprocess.Popen(["rm", p1name + ".dump"])
-    results = subprocess.Popen(["rm", p2name + ".dump"])
-    results = subprocess.Popen(["rm", p3name + ".dump"])
+    results = subprocess.Popen(["rm", p1name.strip() + ".dump"])
+    results = subprocess.Popen(["rm", p2name.strip() + ".dump"])
+    results = subprocess.Popen(["rm", p3name.strip() + ".dump"])
 
     # Write the hand logs in case they were wanted
     f = open('replayer/runner_result', 'w')
