@@ -27,3 +27,4 @@ Version Log
 | Version   | Date  | Summary of Changes                    |
 |-----------|:-----:|---------------------------------------|
 | v0        |1/14   | First working player to beat random   |
+| v1        |1/15   | Improved flop play                    |
