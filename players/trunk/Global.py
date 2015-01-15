@@ -104,12 +104,29 @@ class State(object):
         for _ in range(numBoardCards):
             data.pop(0)
 
+        last_actions = []
         numLastActions = int(data.pop(0))
         for _ in range(numLastActions):
-            data.pop(0)
+            last_actions.append(data.pop(0))
 
         cls.timeBank = float(data.pop(0))
 
-        # TODO: Decide how to adjust aggressiveness and looseness
-        # If we win by being aggressive preflop, increase aggressiveness and looseness
-        # If we lose by being aggressive preflop, increase aggressiveness and looseness
+        win = [x for x in last_actions if 'WIN' in x]
+        win, amount, winner = win.split(':')
+        amount = int(amount)
+
+        # We won
+        if winner != cls.opp1Name and winner != opp2Name:
+            if numBoardCards == 0:
+                cls.looseness += .005
+            if [x for x in last_actions if 'RAISE' in x]:
+                cls.aggressiveness += .05
+        else:
+            # If we lost preflop, start to play more
+            if numBoardCards == 0:
+                cls.looseness -= .005
+
+            folders = [x for x in last_actions if 'FOLD' in x]
+            if numBoardCards >= 3 and folders:
+                cls.aggressiveness -= .05
+

@@ -315,9 +315,6 @@ class Preflop(object):
                     bet_amt = max(min(int(hand_score * hi * State.aggressiveness), hi), lo)
                     return 'RAISE:%d' % bet_amt
 
-                else:
-                    return try_to_call(legal_actions)
-
                 return try_to_call(legal_actions)
             else:
                 # Normally check/fold, but randomly raise
