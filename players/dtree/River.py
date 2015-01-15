@@ -1,13 +1,36 @@
-from lib.hand_eval import convert_string_to_int, score_best_five
+from lib.hand_eval import convert_string_to_int, score_best_five, eval_hand
 from Global import State
 from random import random
+
+
+def quick_check_if_hole_helps(score, board):
+    if len(board) == 3:
+        board = board + [-1, -6]
+    elif len(board) == 4:
+        board = board + [-1]
+    that_score = eval_hand(board)
+    if that_score[0] == score[0]:
+        return False
+    return True
+
+def split_raise(legal_actions):
+    raising_action = [x for x in legal_actions if 'RAISE' in x or 'BET' in x]
+    if not raising_action:
+        return False, False
+    r, lo, hi = raising_action[0].split(':')
+    lo = int(lo)
+    hi = int(hi)
+    return lo, hi
+
 
 
 class River(object):
 
     @classmethod
     def get_action(cls, data):
-        # GETACTION potSize numBoardCards [boardCards] [stackSizes] numActivePlayers [activePlayers] numLastActions [lastActions] numLegalActions [legalActions] timebank
+        # GETACTION potSize numBoardCards [boardCards] [stackSizes]
+        # numActivePlayers [activePlayers] numLastActions [lastActions]
+        # numLegalActions [legalActions] timebank
         data = data.split()
         getaction = data.pop(0)
         potSize = int(data.pop(0))
@@ -50,62 +73,55 @@ class River(object):
         score = score_best_five(board_cards + State.hole_cards)
 
 
-        # The logic will be to consider the probability that we win and compute
-        # First the pot odd, then the implied odds, then the fold equity
-
-        # CHECK / BET
-        # CALL / FOLD / RAISE
-
+        # CHECK / BET           1
+        # CALL / FOLD / RAISE   2
 
 
         # Case 1
         #######################################################################
         # Nobody else has acted
-
         # TODO: consider fold equity for betting and reverse pot odds
         if any([x for x in legal_actions if 'CHECK' in x]):
-            # Determine if we should show strength and how much
-
             # If we have a hand, then bet, if we don't then do not
             bet_prob = 0
 
             # We bet if we have more than a pair
-            if score[0] > 1:
+            if score[0] > 1 and quick_check_if_hole_helps(score, board_cards):
                 bet_prob = 1
-            elif score[0] == 1:
+            elif score[0] == 1 and quick_check_if_hole_helps(score, board_cards):
                 val_of_pair = score[1]
                 # val_of_pair goes from 0 - 12
                 bet_prob += .28
-                bet_prob += val_of_pair * .06
-                # scaled so always betting aces
+                bet_prob += val_of_pair * .03
             elif score[0] == 0:
                 bet_prob += score[1][0] * .01
+            else:
+                # This is our kicker to a pair on the board
+                bet_prob = State.hole_cards[0] / 4 * .01
 
-            r = random()
-            if r < bet_prob:
-                betting_action = [x for x in legal_actions if 'BET' in x]
-                if not betting_action:
-                    return 'CHECK'
-                b, lo, hi = betting_action[0].split(':')
-                lo = int(lo)
-                hi = int(hi)
+            # Do not bet if we do not beat the board
+            if not quick_check_if_hole_helps(score, board_cards):
+                guessed_win_prob = .1
+
+            if random() < bet_prob:
+                lo, hi = split_raise(legal_actions)
 
                 # BET
                 if score[0] >= 4:
-                    # Max bet with a straight
+                    # Max bet with a straight or better
                     bet_amt = hi
-                    return 'RAISE:%d' % bet_amt
+                    return 'BET:%d' % bet_amt
 
                 if score[0] >= 2:
                     bet_amt = max(min(int((.25 + random()) * hi * State.aggressiveness), hi), lo)
-                    return 'RAISE:%d' % bet_amt
+                    return 'BET:%d' % bet_amt
 
                 if score[0] >= 1:
                     bet_amt = max(min(int((.05 * score[1]) * hi * State.aggressiveness), hi), lo)
-                    return 'RAISE:%d' % bet_amt
+                    return 'BET:%d' % bet_amt
 
                 bet_amt = lo
-                return 'RAISE:%d' % bet_amt
+                return 'BET:%d' % bet_amt
             else:
                 return 'CHECK'
 
@@ -123,7 +139,6 @@ class River(object):
 
             pot_odds = float(call_amt) / (2 * call_amt + potSize)
 
-
             # Determine what the odds of winning are by guessing
             guessed_win_prob = 0
             if score[0] == 0:
@@ -139,18 +154,31 @@ class River(object):
                     guessed_win_prob += .7
                     guessed_win_prob += .05 * score[1]
 
+                # If we are playing the board, we are not good
+                if not quick_check_if_hole_helps(score, board_cards):
+                    guessed_win_prob = .1
+
                 if pot_odds < guessed_win_prob:
+                    prev_bets = [x for x in prev_actions if 'RAISE' in x or 'BET' in x]
+                    multibet = len(prev_bets) >= 2
+                    if pot_odds < 2 * guessed_win_prob and not multibet:
+                        lo, hi = split_raise(legal_actions)
+                        if not lo:
+                            return call_action
+
+                        if pot_odds > 4 * guessed_win_prob:
+                            bet_amt = max(min(int(random() * 2 * lo * State.aggressiveness), hi), lo)
+                        else:
+                            bet_amt = max(min(int(random() * hi * State.aggressiveness), hi), lo)
+                        return 'RAISE:%d' % bet_amt
+
                     return call_action
 
                 return 'FOLD'
 
-
-            betting_action = [x for x in legal_actions if 'RAISE' in x]
-            if not betting_action:
+            lo, hi = split_raise(legal_actions)
+            if not lo:
                 return call_action
-            b, lo, hi = betting_action[0].split(':')
-            lo = int(lo)
-            hi = int(hi)
 
             # FULL HOUSE or better is always max raise
             if score[0] >= 6:
@@ -163,7 +191,8 @@ class River(object):
                     return 'RAISE:%d' % hi
                 else:
                     if random() < score[1] * .1:
-                        return 'RAISE:%d' % hi
+                        bet_amt = max(min(int(random() * hi * State.aggressiveness), hi), lo)
+                        return 'RAISE:%d' % bet_amt
                     else:
                         return call_action
 
@@ -174,12 +203,11 @@ class River(object):
                     return 'RAISE:%d' % hi
                 return call_action
 
-
             # Otherwise we want to get the pot bigger
             if pot_odds < 2 * guessed_win_prob:
-                return 'RAISE:%d' % hi
+                bet_amt = max(min(int(random() * hi * State.aggressiveness), hi), lo)
+                return 'RAISE:%d' % bet_amt
 
             return call_action
-
 
         return 'CHECK'

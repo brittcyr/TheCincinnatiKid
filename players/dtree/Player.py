@@ -76,7 +76,6 @@ class Player:
         # Decide which class to use
         numBoardCards = int(data.split()[2])
 
-        # TODO: Use different players
         if numBoardCards == 0:
             # PREFLOP
             action = Preflop.get_action(data)
@@ -85,10 +84,10 @@ class Player:
             action = Flop.get_action(data)
         elif numBoardCards == 4:
             # TURN
-            action = Flop.get_action(data)
+            action = Turn.get_action(data)
         elif numBoardCards == 5:
             # RIVER
-            action = Flop.get_action(data)
+            action = River.get_action(data)
 
         if not action:
             action = "CHECK"

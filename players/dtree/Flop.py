@@ -22,12 +22,53 @@ def split_raise(legal_actions):
     hi = int(hi)
     return lo, hi
 
+def classify_pair_flop(board, score):
+    board = sorted([x / 4 for x in board])
+    if score[1] < board[0]:
+        return 0
+    if score[1] == board[0]:
+        return 1
+    if score[1] > board[0] and score[1] < board[1]:
+        return 2
+    if score[1] == board[1]:
+        return 3
+    if score[1] > board[1] and score[1] < board[2]:
+        return 4
+    if score[1] == board[2]:
+        return 5
+    if score[1] > board[1] and score[1] < board[2]:
+        return 6
+    return -1
+
+DECK = 52
+def count_drawing_outs(hole, board):
+    outs = 0
+    for card in range(DECK):
+        if card in hole or card in board:
+            continue
+        if score_best_five(hole + board + [card]) >= THREE_OF_A_KIND:
+            outs += 1
+    return outs
+
+
+VAL_OF_OUT = .02127 # 1 / 47
+PAIR_ODDS = {0: .1, 1: .2, 2: .4, 3: .6, 4: .7, 5: .9, 6: 1.0}
+HIGH_CARD = 0
+PAIR = 1
+TWO_PAIR = 2
+THREE_OF_A_KIND = 3
+STRAIGHT = 4
+FLUSH = 5
+FULL_HOUSE = 6
+
 
 class Flop(object):
 
     @classmethod
     def get_action(cls, data):
-        # GETACTION potSize numBoardCards [boardCards] [stackSizes] numActivePlayers [activePlayers] numLastActions [lastActions] numLegalActions [legalActions] timebank
+        # GETACTION potSize numBoardCards [boardCards] [stackSizes]
+        # numActivePlayers [activePlayers] numLastActions [lastActions]
+        # numLegalActions [legalActions] timebank
         data = data.split()
         getaction = data.pop(0)
         potSize = int(data.pop(0))
@@ -74,51 +115,42 @@ class Flop(object):
         # CALL / FOLD / RAISE   2
 
 
+        #######################################################################
         # Case 1
         #######################################################################
         # Nobody else has acted
         # TODO: consider fold equity for betting and reverse pot odds
         if any([x for x in legal_actions if 'CHECK' in x]):
-            # If we have a hand, then bet, if we don't then do not
             bet_prob = 0
 
             # We bet if we have more than a pair
-            if score[0] > 1 and quick_check_if_hole_helps(score, board_cards):
+            if score[0] > PAIR and quick_check_if_hole_helps(score, board_cards):
                 bet_prob = 1
-            elif score[0] == 1 and quick_check_if_hole_helps(score, board_cards):
-                val_of_pair = score[1]
-                # val_of_pair goes from 0 - 12
-                bet_prob += .28
-                bet_prob += val_of_pair * .03
-            elif score[0] == 0:
-                bet_prob += score[1][0] * .01
+            elif score[0] == PAIR and quick_check_if_hole_helps(score, board_cards):
+                val = classify_pair_flop(board_cards, score)
+                bet_prob = PAIR_ODDS[val]
+            elif score[0] == HIGH_CARD:
+                bet_prob += score[1][0] * .02
             else:
                 # This is our kicker to a pair on the board
-                bet_prob = State.hole_cards[0] / 4 * .01
-
-            # Do not bet if we do not beat the board
-            if not quick_check_if_hole_helps(score, board_cards):
-                guessed_win_prob = .1
+                bet_prob = max(State.hole_cards) / 4 * .01
 
             if random() < bet_prob:
                 lo, hi = split_raise(legal_actions)
-
-                # BET
-                if score[0] >= 4:
+                if score[0] >= STRAIGHT:
                     # Max bet with a straight or better
                     bet_amt = hi
                     return 'BET:%d' % bet_amt
 
-                if score[0] >= 2:
+                if score[0] >= TWO_PAIR:
                     bet_amt = max(min(int((.25 + random()) * hi * State.aggressiveness), hi), lo)
                     return 'BET:%d' % bet_amt
 
-                if score[0] >= 1:
-                    bet_amt = max(min(int((.05 * score[1]) * hi * State.aggressiveness), hi), lo)
+                if score[0] >= PAIR:
+                    bet_amt = max(min(int(bet_prob * hi * State.aggressiveness), hi), lo)
                     return 'BET:%d' % bet_amt
 
-                bet_amt = lo
-                return 'BET:%d' % bet_amt
+                return 'BET:%d' % lo
             else:
                 return 'CHECK'
 
@@ -138,70 +170,50 @@ class Flop(object):
 
             # Determine what the odds of winning are by guessing
             guessed_win_prob = 0
-            if score[0] == 0:
+            if score[0] == HIGH_CARD:
                 guessed_win_prob = float(score[1][0] / 13) / 40
 
-            if score[0] <= 2:
+            if score[0] <= TWO_PAIR:
                 # PAIR
-                if score[0] == 1:
-                    guessed_win_prob += .05 * score[1]
+                if score[0] == PAIR:
+                    val = classify_pair_flop(board_cards, score)
+                    guessed_win_prob += PAIR_ODDS[val]
 
                 # TWO PAIR
-                if score[0] == 2:
+                elif score[0] == TWO_PAIR:
                     guessed_win_prob += .7
                     guessed_win_prob += .05 * score[1]
 
-                # If we are playing the board, we are not good
-                if not quick_check_if_hole_helps(score, board_cards):
-                    guessed_win_prob = .1
+                # Consider draws as good
+                guessed_win_prob = max(guessed_win_prob, \
+                        VAL_OF_OUT * count_drawing_outs(hole, board))
 
                 if pot_odds < guessed_win_prob:
                     prev_bets = [x for x in prev_actions if 'RAISE' in x or 'BET' in x]
                     multibet = len(prev_bets) >= 2
                     if pot_odds < 2 * guessed_win_prob and not multibet:
                         lo, hi = split_raise(legal_actions)
-                        if not lo:
-                            return call_action
+                        if not lo: return call_action
 
                         if pot_odds > 4 * guessed_win_prob:
                             bet_amt = max(min(int(random() * 2 * lo * State.aggressiveness), hi), lo)
                         else:
                             bet_amt = max(min(int(random() * hi * State.aggressiveness), hi), lo)
                         return 'RAISE:%d' % bet_amt
-
                     return call_action
-
                 return 'FOLD'
 
             lo, hi = split_raise(legal_actions)
-            if not lo:
-                return call_action
+            if not lo: return call_action
 
-            # FULL HOUSE or better is always max raise
-            if score[0] >= 6:
+            if score[0] >= FULL_HOUSE or score[0] == STRAIGHT:
                 return 'RAISE:%d' % hi
 
-            # FLUSH
-            if score[0] == 5:
-                # If the kicker is high enough
-                if score[1] >= 10:
-                    return 'RAISE:%d' % hi
-                else:
-                    if random() < score[1] * .1:
-                        bet_amt = max(min(int(random() * hi * State.aggressiveness), hi), lo)
-                        return 'RAISE:%d' % bet_amt
-                    else:
-                        return call_action
+            if score[0] == FLUSH:
+                bet_amt = max(min(int(score[1] * .9 * hi * State.aggressiveness), hi), lo)
+                return 'RAISE:%d' % bet_amt
 
-            # STRAIGHT
-            if score[0] == 4:
-                # If the kicker is high enough
-                if score[1] >= 10:
-                    return 'RAISE:%d' % hi
-                return call_action
-
-            # Otherwise we want to get the pot bigger
-            if pot_odds < 2 * guessed_win_prob:
+            if score[0] == THREE_OF_A_KIND and quick_check_if_hole_helps(score, board):
                 bet_amt = max(min(int(random() * hi * State.aggressiveness), hi), lo)
                 return 'RAISE:%d' % bet_amt
 

@@ -47,10 +47,10 @@ class Player:
             action = Flop.get_action(data)
         elif numBoardCards == 4:
             # TURN
-            action = Flop.get_action(data)
+            action = Turn.get_action(data)
         elif numBoardCards == 5:
             # RIVER
-            action = Flop.get_action(data)
+            action = River.get_action(data)
 
         if not action:
             action = "CHECK"

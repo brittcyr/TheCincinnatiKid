@@ -1,5 +1,7 @@
 import subprocess
 import argparse
+import os
+import random
 
 
 if __name__ == '__main__':
@@ -8,12 +10,40 @@ if __name__ == '__main__':
     parser.add_argument('-t', dest='times', type=int, default=1, help='Times to run')
     args = parser.parse_args()
 
+    dirs = [x for x in os.listdir("players") if os.path.isdir("players/" + x)]
+
     scores = {}
     wins = {}
     seconds = {}
     lasts = {}
 
     for iteration in range(args.times):
+        new_dirs = [x for x in os.listdir("players") if os.path.isdir("players/" + x)]
+        if new_dirs != dirs:
+            dirs = new_dirs
+            scores = {}
+            wins = {}
+            seconds = {}
+            lasts = {}
+
+        config = file("config.txt", "w")
+        config.write("BIG_BLIND = 2\nSTARTING_STACK = 200\nNUMBER_OF_HANDS = 1000\n")
+        config.write("CONNECTION_TIMEOUT = 2\nTIME_RESTRICTION_PER_GAME = 10\n")
+        config.write("ENFORCE_TIMING_RESTRICTION = true\nDISPLAY_ILLEGAL_ACTIONS = true\n")
+        config.write("TRIPLICATE = true\nHAND_LOG_FILEPATH = ./hand_logs\n")
+
+        l = dirs + ["random"]
+        random.shuffle(l)
+        for i in range(1, 4):
+            current = l[i]
+            if current == "random":
+                config.write("PLAYER_%d_TYPE = RANDOM\nPLAYER_%d_NAME = RANDOM\n" % (i, i))
+            else:
+                config.write("PLAYER_%d_TYPE = FOLDER\nPLAYER_%d_NAME = %s\n" % (i, i, l[i]))
+                config.write("PLAYER_%d_PATH = ./players/%s\n" % (i, l[i]))
+        config.close()
+
+
         # What we want is to run the script
         results = subprocess.Popen(["java", "-jar", "engine_1.4.jar"], stdout=subprocess.PIPE)
         out, err = results.communicate()
