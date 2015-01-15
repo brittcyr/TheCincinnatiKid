@@ -39,7 +39,7 @@ def count_drawing_outs(hole, board):
     outs = 0
     for card in range(DECK):
         if card in hole or card in board: continue
-        if score_best_five(hole + board + [card]) >= THREE_OF_A_KIND:
+        if score_best_five(hole + board + [card])[0] >= THREE_OF_A_KIND:
             outs += 1
     return outs
 
@@ -159,22 +159,18 @@ class Flop(object):
             call_action = [x for x in legal_actions if 'CALL' in x][0]
             call_amt = int(call_action.split(':')[-1])
 
-            pot_odds = float(call_amt) / (2 * call_amt + potSize)
-
+            pot_odds = float(call_amt) / (call_amt + potSize)
             # Determine what the odds of winning are by guessing
-            guessed_win_prob = 0
-            if score[0] == HIGH_CARD:
-                guessed_win_prob = float(score[1][0] / 13) / 40
-
             if score[0] <= TWO_PAIR:
-                # PAIR
-                if score[0] == PAIR:
+                guessed_win_prob = 0
+                # HIGH CARD
+                if score[0] == HIGH_CARD:
+                    guessed_win_prob = float(score[1][0] / 4) / 40
+                elif score[0] == PAIR:
                     val = classify_pair_flop(board_cards, score)
                     guessed_win_prob += PAIR_ODDS[val]
                     if not quick_check_if_hole_helps(score, board_cards):
                         guessed_win_prob *= .5
-
-                # TWO PAIR
                 elif score[0] == TWO_PAIR:
                     guessed_win_prob += .7
                     guessed_win_prob += .05 * score[1]
@@ -190,14 +186,14 @@ class Flop(object):
                 if pot_odds < guessed_win_prob:
                     prev_bets = [x for x in prev_actions if 'RAISE' in x or 'BET' in x]
                     multibet = len(prev_bets) >= 2
-                    if pot_odds < 2 * guessed_win_prob and not multibet:
+                    if 2 * pot_odds < guessed_win_prob and not multibet:
                         lo, hi = split_raise(legal_actions)
                         if not lo: return call_action
 
-                        if pot_odds > 4 * guessed_win_prob:
-                            bet_amt = max(min(int(random() * 2 * lo * State.aggressiveness), hi), lo)
-                        else:
+                        if 4 * pot_odds < guessed_win_prob:
                             bet_amt = max(min(int(random() * hi * State.aggressiveness), hi), lo)
+                        else:
+                            bet_amt = max(min(int(lo * State.aggressiveness), hi), lo)
                         return 'RAISE:%d' % bet_amt
                     return call_action
                 return 'FOLD'
@@ -205,12 +201,8 @@ class Flop(object):
             lo, hi = split_raise(legal_actions)
             if not lo: return call_action
 
-            if score[0] >= FULL_HOUSE or score[0] == STRAIGHT:
+            if score[0] >= STRAIGHT:
                 return 'RAISE:%d' % hi
-
-            if score[0] == FLUSH:
-                bet_amt = max(min(int(score[1] * .9 * hi * State.aggressiveness), hi), lo)
-                return 'RAISE:%d' % bet_amt
 
             if score[0] == THREE_OF_A_KIND and quick_check_if_hole_helps(score, board_cards):
                 bet_amt = max(min(int(random() * hi * State.aggressiveness), hi), lo)
