@@ -48,6 +48,8 @@ class State(object):
             cls.aggressiveness += .1
             return
 
+        # TODO: Consider if we are pot committed in the late game and should just go
+        # all in on anything
 
     @classmethod
     def new_game(cls, data):
