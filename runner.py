@@ -46,7 +46,7 @@ if __name__ == '__main__':
 
 
         # What we want is to run the script
-        results = subprocess.Popen(["java", "-jar", "engine_1.4.jar"], stdout=subprocess.PIPE)
+        results = subprocess.Popen(["java", "-jar", "engine_1.5.jar"], stdout=subprocess.PIPE)
         out, err = results.communicate()
 
         # out is the stdout of running the engine
