@@ -47,7 +47,7 @@ def board_correlation(board_cards):
     return max(flush_correlation(board_cards), \
             straight_correlation(board_cards))
 
-VAL_OF_OUT = .02127 # 1 / 47
+VAL_OF_OUT = .02127  * 1.5 # 1 / 47 * 1.5 to guess that we get another card
 PAIR_ODDS = {0: .1, 1: .2, 2: .4, 3: .6, 4: .7, 5: .9, 6: 1.0, -1: 0}
 HIGH_CARD = 0
 PAIR = 1
