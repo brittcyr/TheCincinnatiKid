@@ -1,7 +1,14 @@
 from lib.hand_eval import convert_string_to_int, score_best_five, eval_hand
+from lib.board_correlation import straight_correlation, flush_correlation
 from Global import State
 from random import random
 
+
+def try_to_check(legal_actions):
+    check_action = [x for x in legal_actions if 'CHECK' in x]
+    if not check_action:
+        return 'FOLD'
+    return check_action[0]
 
 def quick_check_if_hole_helps(score, board):
     if len(board) == 3:
@@ -21,6 +28,42 @@ def split_raise(legal_actions):
     lo = int(lo)
     hi = int(hi)
     return lo, hi
+
+def classify_pair_turn(board, score):
+    board = sorted([x / 4 for x in board])
+    if score[1] > board[3]: return 8
+    if score[1] == board[3]: return 7
+    if score[1] > board[2] and score[1] < board[3]: return 6
+    if score[1] == board[2]: return 5
+    if score[1] > board[1] and score[1] < board[2]: return 4
+    if score[1] == board[1]: return 3
+    if score[1] > board[0] and score[1] < board[1]: return 2
+    if score[1] == board[0]: return 1
+    if score[1] < board[0]: return 0
+    return 0
+
+DECK = 52
+def count_drawing_outs(hole, board):
+    outs = 0
+    for card in range(DECK):
+        if card in hole or card in board: continue
+        if score_best_five(hole + board + [card])[0] >= THREE_OF_A_KIND:
+            outs += 1
+    return outs
+
+
+VAL_OF_OUT = .02174 # 1 / 46
+PAIR_ODDS = {0: .1, 1: .2, 2: .3, 3: .4, 4: .5, 5: .6, 6: .7, 7: .9, 8: 1.0}
+HIGH_CARD = 0
+PAIR = 1
+TWO_PAIR = 2
+THREE_OF_A_KIND = 3
+STRAIGHT = 4
+FLUSH = 5
+FULL_HOUSE = 6
+
+BLUFF_AT_SCARY_BOARD = .05
+BLUFF_AT_REALLY_SCARY_BOARD = .15
 
 
 class Turn(object):
@@ -65,145 +108,120 @@ class Turn(object):
 
         State.timebank = float(data.pop(0))
 
-
         # These are the variables based on position
-        seat = State.seat
-        numActivePlayers = numActivePlayers
         score = score_best_five(board_cards + State.hole_cards)
-
+        i_called = 'CALL' in prev_actions[0]
 
         # CHECK / BET           1
         # CALL / FOLD / RAISE   2
 
 
-        # Case 1
+        ############################ Case 1 ###################################
         #######################################################################
-        # Nobody else has acted
-        # TODO: consider fold equity for betting and reverse pot odds
+        # Nobody else has bet
         if any([x for x in legal_actions if 'CHECK' in x]):
-            # If we have a hand, then bet, if we don't then do not
-            bet_prob = 0
+            lo, hi = split_raise(legal_actions)
+            if not lo: return 'CHECK'
 
             # We bet if we have more than a pair
-            if score[0] > 1 and quick_check_if_hole_helps(score, board_cards):
+            if score[0] > PAIR and quick_check_if_hole_helps(score, board_cards):
                 bet_prob = 1
-            elif score[0] == 1 and quick_check_if_hole_helps(score, board_cards):
-                val_of_pair = score[1]
-                # val_of_pair goes from 0 - 12
-                bet_prob += .28
-                bet_prob += val_of_pair * .03
-            elif score[0] == 0:
-                bet_prob += score[1][0] * .01
+            elif score[0] == PAIR and quick_check_if_hole_helps(score, board_cards):
+                bet_prob = PAIR_ODDS[classify_pair_turn(board_cards, score)]
             else:
-                # This is our kicker to a pair on the board
-                bet_prob = State.hole_cards[0] / 4 * .01
-
-            # Do not bet if we do not beat the board
-            if not quick_check_if_hole_helps(score, board_cards):
-                guessed_win_prob = .1
+                # This is our kicker to a pair on the board or just high card
+                bet_prob = max(State.hole_cards) / 4 * .01
 
             if random() < bet_prob:
-                lo, hi = split_raise(legal_actions)
+                if score[0] >= STRAIGHT:
+                    return 'BET:%d' % hi
 
-                # BET
-                if score[0] >= 4:
-                    # Max bet with a straight or better
-                    bet_amt = hi
+                # If they raised into us and we called, then do not attack
+                if i_called: return try_to_check(legal_actions)
+
+                if score[0] >= TWO_PAIR:
+                    bet_amt = max(min(int(hi * State.aggressiveness), hi), lo)
                     return 'BET:%d' % bet_amt
 
-                if score[0] >= 2:
-                    bet_amt = max(min(int((.25 + random()) * hi * State.aggressiveness), hi), lo)
+                # Bet for at least middle pair
+                if score[0] >= PAIR and quick_check_if_hole_helps(score, board_cards) and \
+                        classify_pair_turn(board_cards, score) >= 5:
+                    bet_amt = max(min(int(bet_prob * hi * State.aggressiveness), hi), lo)
                     return 'BET:%d' % bet_amt
 
-                if score[0] >= 1:
-                    bet_amt = max(min(int((.05 * score[1]) * hi * State.aggressiveness), hi), lo)
-                    return 'BET:%d' % bet_amt
-
-                bet_amt = lo
-                return 'BET:%d' % bet_amt
+                return 'BET:%d' % lo
             else:
+                # Bluff at scary board
+                if max(flush_correlation(board_cards), straight_correlation(board_cards)) >= 3:
+                    if random() > BLUFF_AT_SCARY_BOARD:
+                        bet_amt = max(min(int(2 * lo * State.aggressiveness), hi), lo)
+                        return 'BET:%d' % bet_amt
+
+                if max(flush_correlation(board_cards), straight_correlation(board_cards)) >= 4 \
+                        and not i_called:
+                    if random() > BLUFF_AT_REALLY_SCARY_BOARD:
+                        bet_amt = max(min(int(2 * lo * State.aggressiveness), hi), lo)
+                        return 'BET:%d' % bet_amt
+
                 return 'CHECK'
 
 
-        # Case 2
+        ############################ Case 2 ###################################
         #######################################################################
         # Need to decide if we should FOLD / CALL / RAISE
-        # TODO: Consider if we are facing multiple bets. Tune this
-
         if any([x for x in legal_actions if 'CALL' in x]):
             # Compute pot odds
             call_action = [x for x in legal_actions if 'CALL' in x][0]
             call_amt = int(call_action.split(':')[-1])
-            pot_size = potSize
 
-            pot_odds = float(call_amt) / (2 * call_amt + potSize)
-
+            pot_odds = float(call_amt) / (call_amt + potSize)
             # Determine what the odds of winning are by guessing
-            guessed_win_prob = 0
-            if score[0] == 0:
-                guessed_win_prob = float(score[1][0] / 13) / 40
+            if score[0] <= TWO_PAIR:
+                guessed_win_prob = 0
+                # HIGH CARD
+                if score[0] == HIGH_CARD:
+                    guessed_win_prob = float(score[1][0] / 4) / 60
+                elif score[0] == PAIR:
+                    val = classify_pair_turn(board_cards, score)
+                    guessed_win_prob += PAIR_ODDS[val]
+                    if not quick_check_if_hole_helps(score, board_cards):
+                        guessed_win_prob *= .5
+                elif score[0] == TWO_PAIR:
+                    guessed_win_prob += .6
+                    guessed_win_prob += .04 * score[1]
 
-            if score[0] <= 2:
-                # PAIR
-                if score[0] == 1:
-                    guessed_win_prob += .05 * score[1]
+                # Drop our odds if there is a scary board
+                if max(flush_correlation(board_cards), straight_correlation(board_cards)) >= 3:
+                    guessed_win_prob *= .5
+                if max(flush_correlation(board_cards), straight_correlation(board_cards)) >= 4:
+                    guessed_win_prob *= .5
 
-                # TWO PAIR
-                if score[0] == 2:
-                    guessed_win_prob += .7
-                    guessed_win_prob += .05 * score[1]
-
-                # If we are playing the board, we are not good
-                if not quick_check_if_hole_helps(score, board_cards):
-                    guessed_win_prob = .1
+                # Consider draws as good
+                guessed_win_prob = max(guessed_win_prob, \
+                        VAL_OF_OUT * count_drawing_outs(State.hole_cards, board_cards))
 
                 if pot_odds < guessed_win_prob:
                     prev_bets = [x for x in prev_actions if 'RAISE' in x or 'BET' in x]
                     multibet = len(prev_bets) >= 2
-                    if pot_odds < 2 * guessed_win_prob and not multibet:
+                    if 2 * pot_odds < guessed_win_prob and not multibet:
                         lo, hi = split_raise(legal_actions)
-                        if not lo:
-                            return call_action
+                        if not lo: return call_action
 
-                        if pot_odds > 4 * guessed_win_prob:
-                            bet_amt = max(min(int(random() * 2 * lo * State.aggressiveness), hi), lo)
-                        else:
+                        if 4 * pot_odds < guessed_win_prob:
                             bet_amt = max(min(int(random() * hi * State.aggressiveness), hi), lo)
+                        else:
+                            bet_amt = max(min(int(lo * State.aggressiveness), hi), lo)
                         return 'RAISE:%d' % bet_amt
-
                     return call_action
-
                 return 'FOLD'
 
             lo, hi = split_raise(legal_actions)
-            if not lo:
-                return call_action
+            if not lo: return call_action
 
-            # FULL HOUSE or better is always max raise
-            if score[0] >= 6:
+            if score[0] >= STRAIGHT:
                 return 'RAISE:%d' % hi
 
-            # FLUSH
-            if score[0] == 5:
-                # If the kicker is high enough
-                if score[1] >= 10:
-                    return 'RAISE:%d' % hi
-                else:
-                    if random() < score[1] * .1:
-                        bet_amt = max(min(int(random() * hi * State.aggressiveness), hi), lo)
-                        return 'RAISE:%d' % bet_amt
-                    else:
-                        return call_action
-
-            # STRAIGHT
-            if score[0] == 4:
-                # If the kicker is high enough
-                if score[1] >= 10:
-                    return 'RAISE:%d' % hi
-                return call_action
-
-            # Otherwise we want to get the pot bigger
-            if pot_odds < 2 * guessed_win_prob:
+            if score[0] == THREE_OF_A_KIND and quick_check_if_hole_helps(score, board_cards):
                 bet_amt = max(min(int(random() * hi * State.aggressiveness), hi), lo)
                 return 'RAISE:%d' % bet_amt
 

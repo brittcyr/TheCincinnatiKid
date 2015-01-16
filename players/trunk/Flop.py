@@ -31,7 +31,7 @@ def classify_pair_flop(board, score):
     if score[1] == board[1]: return 3
     if score[1] > board[1] and score[1] < board[2]: return 4
     if score[1] == board[2]: return 5
-    if score[1] > board[1] and score[1] < board[2]: return 6
+    if score[1] > board[2]: return 6
     return -1
 
 DECK = 52
@@ -54,6 +54,7 @@ STRAIGHT = 4
 FLUSH = 5
 FULL_HOUSE = 6
 
+BLUFF_AT_SCARY_BOARD = .1
 
 class Flop(object):
 
