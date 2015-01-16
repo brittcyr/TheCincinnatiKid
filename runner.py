@@ -1,6 +1,7 @@
 import subprocess
 import argparse
 import os
+import shutil
 import random
 import math
 
@@ -58,6 +59,9 @@ if __name__ == '__main__':
                         h = open('ILLEGAL_TRUNK_ACTIONS', 'a')
                         h.write(file_name + '\n')
                         h.close()
+			srcfile = './trunk.dump'
+			shutil.copy(srcfile, './replayer/failures/' + file_name)
+			break
                 g.close()
 
         # out is the stdout of running the engine
