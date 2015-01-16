@@ -6,7 +6,6 @@ import math
 
 
 if __name__ == '__main__':
-    # TODO: Make the number of players variable
     parser = argparse.ArgumentParser(description='Run tournament.', add_help=False, prog='pokerbot')
     parser.add_argument('-t', dest='times', type=int, default=1, help='Times to run')
     args = parser.parse_args()
@@ -46,7 +45,7 @@ if __name__ == '__main__':
 
 
         # What we want is to run the script
-        results = subprocess.Popen(["java", "-jar", "engine_1.5.jar"], stdout=subprocess.PIPE)
+        results = subprocess.Popen(["java", "-jar", "engine_1.4.jar"], stdout=subprocess.PIPE)
         out, err = results.communicate()
 
         out_lines = [x.strip() for x in out.split('\n')]
