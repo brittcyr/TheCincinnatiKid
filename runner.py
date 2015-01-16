@@ -49,6 +49,18 @@ if __name__ == '__main__':
         results = subprocess.Popen(["java", "-jar", "engine_1.5.jar"], stdout=subprocess.PIPE)
         out, err = results.communicate()
 
+        out_lines = [x.strip() for x in out.split('\n')]
+        for line in out_lines:
+            if 'Writing to hand log' in line:
+                file_name = line.split("Writing to hand log: ")[1]
+                g = open(file_name)
+                for line in g:
+                    if '### ILLEGAL ACTION' in line and 'trunk' in line:
+                        h = open('ILLEGAL_TRUNK_ACTIONS', 'a')
+                        h.write(file_name + '\n')
+                        h.close()
+                g.close()
+
         # out is the stdout of running the engine
         locations = []
         lines = out.split('\n')
