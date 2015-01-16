@@ -60,7 +60,7 @@ if __name__ == '__main__':
                         h.write(file_name + '\n')
                         h.close()
 			srcfile = './trunk.dump'
-			filename = filename.split('./hand_logs/')[1]
+			file_name = file_name.split('./hand_logs/')[1]
 			shutil.copy(srcfile, './replayer/failures/' + file_name)
 			break
                 g.close()
