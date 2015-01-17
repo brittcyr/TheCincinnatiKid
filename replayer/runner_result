@@ -7,82 +7,82 @@ Starting the pokerbots engine...
 Running engine with parameters:
     BIG_BLIND=2             STARTING_STACK=200
     CONNECTION_TIMEOUT=2    ENFORCE_TIMING_RESTRICTION=true
-    NUMBER_OF_HANDS=1000    TIME_RESTRICTION_PER_GAME=10.000
+    NUMBER_OF_HANDS=1000    TIME_RESTRICTION_PER_GAME=100.000
     DISPLAY_ILLEGAL_ACTIONS=true
-Writing to hand log: ./hand_logs/match_check_fold_v1_RANDOM_01_16_21_05_39_547.txt
-Compiling bot ./players/check_fold with: scons
-Output by bot check_fold will be in check_fold.dump
-Initialized check_fold on port 3000
+Writing to hand log: ./hand_logs/match_RANDOM_v1_v3_01_17_18_06_29_396.txt
 Compiling bot ./players/v1 with: scons
 Output by bot v1 will be in v1.dump
-Initialized v1 on port 3001
-Shutting down player check_fold
-Finished shutting down socket player: check_fold
+Initialized v1 on port 3000
+Compiling bot ./players/v3 with: scons
+Output by bot v3 will be in v3.dump
+Initialized v3 on port 3001
 Shutting down player v1
 Finished shutting down socket player: v1
+Shutting down player v3
+Finished shutting down socket player: v3
 
 Running triplicate match.
-Writing to hand log: ./hand_logs/match_check_fold_v1_RANDOM_01_16_21_05_39_5472.txt
-Compiling bot ./players/check_fold with: scons
-Output by bot check_fold will be in check_fold.dump
-Initialized check_fold on port 3000
+Writing to hand log: ./hand_logs/match_RANDOM_v1_v3_01_17_18_06_29_3962.txt
 Compiling bot ./players/v1 with: scons
-Output by bot v1 will be in v1.dump
-Initialized v1 on port 3001
-Shutting down player check_fold
-Finished shutting down socket player: check_fold
-Shutting down player v1
-Finished shutting down socket player: v1
+Output by bot v12 will be in v12.dump
+Initialized v12 on port 3000
+Compiling bot ./players/v3 with: scons
+Output by bot v32 will be in v32.dump
+Initialized v32 on port 3001
+Shutting down player v32
+Finished shutting down socket player: v32
+Shutting down player v12
+Finished shutting down socket player: v12
 
 Running triplicate match.
-Writing to hand log: ./hand_logs/match_check_fold_v1_RANDOM_01_16_21_05_39_5473.txt
-Compiling bot ./players/check_fold with: scons
-Output by bot check_fold will be in check_fold.dump
-Initialized check_fold on port 3000
+Writing to hand log: ./hand_logs/match_RANDOM_v1_v3_01_17_18_06_29_3963.txt
 Compiling bot ./players/v1 with: scons
-Output by bot v1 will be in v1.dump
-Initialized v1 on port 3001
-Shutting down player v1
-Finished shutting down socket player: v1
-Shutting down player check_fold
-Finished shutting down socket player: check_fold
+Output by bot v13 will be in v13.dump
+Initialized v13 on port 3000
+Compiling bot ./players/v3 with: scons
+Output by bot v33 will be in v33.dump
+Initialized v33 on port 3001
+Shutting down player v13
+Finished shutting down socket player: v13
+Shutting down player v33
+Finished shutting down socket player: v33
 
 Running triplicate match.
-Writing to hand log: ./hand_logs/match_check_fold_v1_RANDOM_01_16_21_05_39_5474.txt
-Compiling bot ./players/check_fold with: scons
-Output by bot check_fold will be in check_fold.dump
-Initialized check_fold on port 3000
+Writing to hand log: ./hand_logs/match_RANDOM_v1_v3_01_17_18_06_29_3964.txt
 Compiling bot ./players/v1 with: scons
-Output by bot v1 will be in v1.dump
-Initialized v1 on port 3001
-Shutting down player v1
-Finished shutting down socket player: v1
-Shutting down player check_fold
-Finished shutting down socket player: check_fold
+Output by bot v14 will be in v14.dump
+Initialized v14 on port 3000
+Compiling bot ./players/v3 with: scons
+Output by bot v34 will be in v34.dump
+Initialized v34 on port 3001
+Shutting down player v14
+Finished shutting down socket player: v14
+Shutting down player v34
+Finished shutting down socket player: v34
 
 Running triplicate match.
-Writing to hand log: ./hand_logs/match_check_fold_v1_RANDOM_01_16_21_05_39_5475.txt
-Compiling bot ./players/check_fold with: scons
-Output by bot check_fold will be in check_fold.dump
-Initialized check_fold on port 3000
+Writing to hand log: ./hand_logs/match_RANDOM_v1_v3_01_17_18_06_29_3965.txt
 Compiling bot ./players/v1 with: scons
-Output by bot v1 will be in v1.dump
-Initialized v1 on port 3001
-Shutting down player check_fold
-Finished shutting down socket player: check_fold
-Shutting down player v1
-Finished shutting down socket player: v1
+Output by bot v15 will be in v15.dump
+Initialized v15 on port 3000
+Compiling bot ./players/v3 with: scons
+Output by bot v35 will be in v35.dump
+Initialized v35 on port 3001
+Shutting down player v35
+Finished shutting down socket player: v35
+Shutting down player v15
+Finished shutting down socket player: v15
 
 Running triplicate match.
-Writing to hand log: ./hand_logs/match_check_fold_v1_RANDOM_01_16_21_05_39_5476.txt
-Compiling bot ./players/check_fold with: scons
-Output by bot check_fold will be in check_fold.dump
-Initialized check_fold on port 3000
+Writing to hand log: ./hand_logs/match_RANDOM_v1_v3_01_17_18_06_29_3966.txt
 Compiling bot ./players/v1 with: scons
-Output by bot v1 will be in v1.dump
-Initialized v1 on port 3001
-Shutting down player v1
-Finished shutting down socket player: v1
-Shutting down player check_fold
-Finished shutting down socket player: check_fold
+Output by bot v16 will be in v16.dump
+Initialized v16 on port 3000
+Compiling bot ./players/v3 with: scons
+Output by bot v36 will be in v36.dump
+Initialized v36 on port 3001
+Shutting down player v36
+Finished shutting down socket player: v36
+Shutting down player v16
+Finished shutting down socket player: v16
 Engine has finished running.

@@ -57,7 +57,6 @@ if __name__ == '__main__':
 
         # Find the one that has played the least and force it into the first position
         uses = [(wins[x] + seconds[x] + lasts[x], x) for x in l]
-        print uses
         (uses, bot) = min(uses)
         l.insert(1, l.pop(l.index(bot)))
 
