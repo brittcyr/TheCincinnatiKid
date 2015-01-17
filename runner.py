@@ -33,7 +33,6 @@ if __name__ == '__main__':
                 wins[d] = 0
                 seconds[d] = 0
                 lasts[d] = 0
-        print dirs, scores
 
         config = file("config.txt", "w")
         config.write("BIG_BLIND = 2\nSTARTING_STACK = 200\nNUMBER_OF_HANDS = 1000\n")
@@ -98,11 +97,9 @@ if __name__ == '__main__':
                     p1name = p1name.strip()
                     p2name = p2name.strip()
                     p3name = p3name.strip()
-                    print p1name, p2name, p3name
                     if p1name not in scores: p1name = p1name[:-1]
                     if p2name not in scores: p2name = p2name[:-1]
                     if p3name not in scores: p3name = p3name[:-1]
-                    print p1name, p2name, p3name
                     last_result = [(p1name.strip(), int(p1val)),
                                    (p2name.strip(), int(p2val)),
                                    (p3name.strip(), int(p3val))]
