@@ -58,10 +58,10 @@ if __name__ == '__main__':
                 g = open(file_name)
                 for line in g:
                     if '### ILLEGAL ACTION' in line and 'trunk' in line:
+			print out, err, 'BAD TRUNK ACTION'
 			srcfile = './trunk.dump'
 			file_name = file_name.split('./hand_logs/')[1]
 			shutil.copy(srcfile, './replayer/failures/' + file_name)
-			print out, err, 'BAD TRUNK ACTION'
 
                         h = open('ILLEGAL_TRUNK_ACTIONS', 'a')
                         h.write(file_name + '\n')
@@ -89,12 +89,12 @@ if __name__ == '__main__':
                     p1name, p1val = p1.replace(')', '').split('(')
                     p2name, p2val = p2.replace(')', '').split('(')
                     p3name, p3val = p3.replace(')', '').split('(')
+                    p1name = p1name.strip()[:-1]
+                    p2name = p2name.strip()[:-1]
+                    p3name = p3name.strip()[:-1]
                     last_result = [(p1name.strip(), int(p1val)),
                                    (p2name.strip(), int(p2val)),
                                    (p3name.strip(), int(p3val))]
-                    p1name = p1name.strip()
-                    p2name = p2name.strip()
-                    p3name = p3name.strip()
             f.close()
             game_result = sorted(last_result, key=lambda x: x[1], reverse=True)
             game_results.append(game_result)

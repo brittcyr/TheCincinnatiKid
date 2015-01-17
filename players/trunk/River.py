@@ -118,7 +118,7 @@ class River(object):
         # Nobody else has bet
         if any([x for x in legal_actions if 'CHECK' in x]):
             lo, hi = split_raise(legal_actions)
-            if not lo: return 'CHECK'
+            if not lo: return try_to_check(legal_actions)
 
             # We bet if we have more than a pair
             if score[0] > PAIR and quick_check_if_hole_helps(score, board_cards):
@@ -159,7 +159,7 @@ class River(object):
                         bet_amt = max(min(int(2 * lo * State.aggressiveness), hi), lo)
                         return 'BET:%d' % bet_amt
 
-                return 'CHECK'
+                return try_to_check(legal_actions)
 
 
         ############################ Case 2 ###################################
