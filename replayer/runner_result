@@ -9,80 +9,80 @@ Running engine with parameters:
     CONNECTION_TIMEOUT=2    ENFORCE_TIMING_RESTRICTION=true
     NUMBER_OF_HANDS=1000    TIME_RESTRICTION_PER_GAME=100.000
     DISPLAY_ILLEGAL_ACTIONS=true
-Writing to hand log: ./hand_logs/match_RANDOM_v1_v3_01_17_18_06_29_396.txt
-Compiling bot ./players/v1 with: scons
-Output by bot v1 will be in v1.dump
-Initialized v1 on port 3000
-Compiling bot ./players/v3 with: scons
-Output by bot v3 will be in v3.dump
-Initialized v3 on port 3001
-Shutting down player v1
-Finished shutting down socket player: v1
-Shutting down player v3
-Finished shutting down socket player: v3
+Writing to hand log: ./hand_logs/match_RANDOM_trunk_v2_01_17_18_07_02_200.txt
+Compiling bot ./players/trunk with: scons
+Output by bot trunk will be in trunk.dump
+Initialized trunk on port 3000
+Compiling bot ./players/v2 with: scons
+Output by bot v2 will be in v2.dump
+Initialized v2 on port 3001
+Shutting down player trunk
+Finished shutting down socket player: trunk
+Shutting down player v2
+Finished shutting down socket player: v2
 
 Running triplicate match.
-Writing to hand log: ./hand_logs/match_RANDOM_v1_v3_01_17_18_06_29_3962.txt
-Compiling bot ./players/v1 with: scons
-Output by bot v12 will be in v12.dump
-Initialized v12 on port 3000
-Compiling bot ./players/v3 with: scons
-Output by bot v32 will be in v32.dump
-Initialized v32 on port 3001
-Shutting down player v32
-Finished shutting down socket player: v32
-Shutting down player v12
-Finished shutting down socket player: v12
+Writing to hand log: ./hand_logs/match_RANDOM_trunk_v2_01_17_18_07_02_2002.txt
+Compiling bot ./players/trunk with: scons
+Output by bot trunk2 will be in trunk2.dump
+Initialized trunk2 on port 3000
+Compiling bot ./players/v2 with: scons
+Output by bot v22 will be in v22.dump
+Initialized v22 on port 3001
+Shutting down player v22
+Finished shutting down socket player: v22
+Shutting down player trunk2
+Finished shutting down socket player: trunk2
 
 Running triplicate match.
-Writing to hand log: ./hand_logs/match_RANDOM_v1_v3_01_17_18_06_29_3963.txt
-Compiling bot ./players/v1 with: scons
-Output by bot v13 will be in v13.dump
-Initialized v13 on port 3000
-Compiling bot ./players/v3 with: scons
-Output by bot v33 will be in v33.dump
-Initialized v33 on port 3001
-Shutting down player v13
-Finished shutting down socket player: v13
-Shutting down player v33
-Finished shutting down socket player: v33
+Writing to hand log: ./hand_logs/match_RANDOM_trunk_v2_01_17_18_07_02_2003.txt
+Compiling bot ./players/trunk with: scons
+Output by bot trunk3 will be in trunk3.dump
+Initialized trunk3 on port 3000
+Compiling bot ./players/v2 with: scons
+Output by bot v23 will be in v23.dump
+Initialized v23 on port 3001
+Shutting down player trunk3
+Finished shutting down socket player: trunk3
+Shutting down player v23
+Finished shutting down socket player: v23
 
 Running triplicate match.
-Writing to hand log: ./hand_logs/match_RANDOM_v1_v3_01_17_18_06_29_3964.txt
-Compiling bot ./players/v1 with: scons
-Output by bot v14 will be in v14.dump
-Initialized v14 on port 3000
-Compiling bot ./players/v3 with: scons
-Output by bot v34 will be in v34.dump
-Initialized v34 on port 3001
-Shutting down player v14
-Finished shutting down socket player: v14
-Shutting down player v34
-Finished shutting down socket player: v34
+Writing to hand log: ./hand_logs/match_RANDOM_trunk_v2_01_17_18_07_02_2004.txt
+Compiling bot ./players/trunk with: scons
+Output by bot trunk4 will be in trunk4.dump
+Initialized trunk4 on port 3000
+Compiling bot ./players/v2 with: scons
+Output by bot v24 will be in v24.dump
+Initialized v24 on port 3001
+Shutting down player trunk4
+Finished shutting down socket player: trunk4
+Shutting down player v24
+Finished shutting down socket player: v24
 
 Running triplicate match.
-Writing to hand log: ./hand_logs/match_RANDOM_v1_v3_01_17_18_06_29_3965.txt
-Compiling bot ./players/v1 with: scons
-Output by bot v15 will be in v15.dump
-Initialized v15 on port 3000
-Compiling bot ./players/v3 with: scons
-Output by bot v35 will be in v35.dump
-Initialized v35 on port 3001
-Shutting down player v35
-Finished shutting down socket player: v35
-Shutting down player v15
-Finished shutting down socket player: v15
+Writing to hand log: ./hand_logs/match_RANDOM_trunk_v2_01_17_18_07_02_2005.txt
+Compiling bot ./players/trunk with: scons
+Output by bot trunk5 will be in trunk5.dump
+Initialized trunk5 on port 3000
+Compiling bot ./players/v2 with: scons
+Output by bot v25 will be in v25.dump
+Initialized v25 on port 3001
+Shutting down player v25
+Finished shutting down socket player: v25
+Shutting down player trunk5
+Finished shutting down socket player: trunk5
 
 Running triplicate match.
-Writing to hand log: ./hand_logs/match_RANDOM_v1_v3_01_17_18_06_29_3966.txt
-Compiling bot ./players/v1 with: scons
-Output by bot v16 will be in v16.dump
-Initialized v16 on port 3000
-Compiling bot ./players/v3 with: scons
-Output by bot v36 will be in v36.dump
-Initialized v36 on port 3001
-Shutting down player v36
-Finished shutting down socket player: v36
-Shutting down player v16
-Finished shutting down socket player: v16
+Writing to hand log: ./hand_logs/match_RANDOM_trunk_v2_01_17_18_07_02_2006.txt
+Compiling bot ./players/trunk with: scons
+Output by bot trunk6 will be in trunk6.dump
+Initialized trunk6 on port 3000
+Compiling bot ./players/v2 with: scons
+Output by bot v26 will be in v26.dump
+Initialized v26 on port 3001
+Shutting down player v26
+Finished shutting down socket player: v26
+Shutting down player trunk6
+Finished shutting down socket player: trunk6
 Engine has finished running.

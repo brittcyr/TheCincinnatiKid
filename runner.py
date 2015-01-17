@@ -180,9 +180,9 @@ th, td {
     # Cleanup the scons and sql
     results = subprocess.Popen(["rm", "scons.dump"])
     results = subprocess.Popen(["rm", "sqlite.db"])
-    results = subprocess.Popen(["rm", p1name.strip() + ".dump"])
-    results = subprocess.Popen(["rm", p2name.strip() + ".dump"])
-    results = subprocess.Popen(["rm", p3name.strip() + ".dump"])
+    if p1name != 'RANDOM': results = subprocess.Popen(["rm", p1name + ".dump"])
+    if p2name != 'RANDOM': results = subprocess.Popen(["rm", p2name + ".dump"])
+    if p3name != 'RANDOM': results = subprocess.Popen(["rm", p3name + ".dump"])
 
     # Write the hand logs in case they were wanted
     f = open('replayer/runner_result', 'w')
