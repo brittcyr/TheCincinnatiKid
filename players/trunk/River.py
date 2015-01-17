@@ -124,7 +124,7 @@ class River(object):
             if score[0] > PAIR and quick_check_if_hole_helps(score, board_cards):
                 bet_prob = 1
             elif score[0] == PAIR and quick_check_if_hole_helps(score, board_cards):
-                bet_prob = PAIR_ODDS[classify_pair_turn(board_cards, score)]
+                bet_prob = PAIR_ODDS[classify_pair_river(board_cards, score)]
             else:
                 # This is our kicker to a pair on the board or just high card
                 bet_prob = max(State.hole_cards) / 4 * .01
@@ -141,7 +141,7 @@ class River(object):
                     return 'BET:%d' % bet_amt
 
                 if score[0] >= PAIR and quick_check_if_hole_helps(score, board_cards) and \
-                        classify_pair_turn(board_cards, score) >= 5:
+                        classify_pair_river(board_cards, score) >= 5:
                     bet_amt = max(min(int(bet_prob * hi * State.aggressiveness), hi), lo)
                     return 'BET:%d' % bet_amt
 
@@ -183,7 +183,7 @@ class River(object):
                 if score[0] == HIGH_CARD:
                     guessed_win_prob = float(score[1][0] / 4) / 60
                 elif score[0] == PAIR:
-                    val = classify_pair_turn(board_cards, score)
+                    val = classify_pair_river(board_cards, score)
                     guessed_win_prob += PAIR_ODDS[val]
                     if not quick_check_if_hole_helps(score, board_cards):
                         guessed_win_prob *= .5
