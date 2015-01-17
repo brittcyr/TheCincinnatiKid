@@ -36,17 +36,23 @@ if __name__ == '__main__':
                     seconds[d] = 0
                     lasts[d] = 0
 
-        config = file("config.txt", "w")
+        config = open("config.txt", "w")
         config.write("BIG_BLIND = 2\nSTARTING_STACK = 200\nNUMBER_OF_HANDS = 1000\n")
         config.write("CONNECTION_TIMEOUT = 2\nTIME_RESTRICTION_PER_GAME = 100\n")
         config.write("ENFORCE_TIMING_RESTRICTION = true\nDISPLAY_ILLEGAL_ACTIONS = true\n")
         config.write("TRIPLICATE = true\nHAND_LOG_FILEPATH = ./hand_logs\n")
 
         l = dirs + ["random"]
+
+        f = open('retired.txt', 'r')
+        retired = []
+        for line in f:
+            retired.append(line.strip())
+        f.close()
+        l = [x for x in l if x not in retired]
         random.shuffle(l)
+
         for i in range(1, 4):
-            # TODO: let the newer bots play catch up
-            # TODO: be able to retire certain bots
             current = l.pop(0)
             if current == "random":
                 config.write("PLAYER_%d_TYPE = RANDOM\nPLAYER_%d_NAME = RANDOM\n" % (i, i))
