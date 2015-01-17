@@ -162,7 +162,7 @@ class River(object):
                 # Figure out if we are the last one to act and dont give free check
                 if len(prev_actions) >= 2 and 'DEAL' in prev_actions[1] and 'CHECK' \
                         in prev_actions[0]:
-                    return 'BET:%d' % 2 * lo
+                    return 'BET:%d' % (2 * lo)
 
                 return try_to_check(legal_actions)
 
