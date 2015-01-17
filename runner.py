@@ -33,6 +33,7 @@ if __name__ == '__main__':
                 wins[d] = 0
                 seconds[d] = 0
                 lasts[d] = 0
+        print dirs, scores
 
         config = file("config.txt", "w")
         config.write("BIG_BLIND = 2\nSTARTING_STACK = 200\nNUMBER_OF_HANDS = 1000\n")
@@ -97,33 +98,17 @@ if __name__ == '__main__':
                     p1name = p1name.strip()
                     p2name = p2name.strip()
                     p3name = p3name.strip()
-                    if p1name not in dirs: p1name = p1name[:-1]
-                    if p2name not in dirs: p2name = p2name[:-1]
-                    if p3name not in dirs: p3name = p3name[:-1]
+                    print p1name, p2name, p3name
+                    if p1name not in scores: p1name = p1name[:-1]
+                    if p2name not in scores: p2name = p2name[:-1]
+                    if p3name not in scores: p3name = p3name[:-1]
+                    print p1name, p2name, p3name
                     last_result = [(p1name.strip(), int(p1val)),
                                    (p2name.strip(), int(p2val)),
                                    (p3name.strip(), int(p3val))]
             f.close()
             game_result = sorted(last_result, key=lambda x: x[1], reverse=True)
             game_results.append(game_result)
-
-        if p1name.strip() not in scores:
-            scores[p1name.strip()] = 0
-            wins[p1name.strip()] = 0
-            seconds[p1name.strip()] = 0
-            lasts[p1name.strip()] = 0
-
-        if p2name.strip() not in scores:
-            scores[p2name.strip()] = 0
-            wins[p2name.strip()] = 0
-            seconds[p2name.strip()] = 0
-            lasts[p2name.strip()] = 0
-
-        if p3name.strip() not in scores:
-            scores[p3name.strip()] = 0
-            wins[p3name.strip()] = 0
-            seconds[p3name.strip()] = 0
-            lasts[p3name.strip()] = 0
 
         for [(winner, _), (second, _), (loser, _)] in game_results:
             scores[winner] += 100
