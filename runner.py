@@ -4,12 +4,14 @@ import os
 import shutil
 import random
 import math
+from datetime import datetime
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Run tournament.', add_help=False, prog='pokerbot')
     parser.add_argument('-t', dest='times', type=int, default=1, help='Times to run')
     args = parser.parse_args()
+    start_time = datetime.now()
 
     dirs = [x for x in os.listdir("players") if os.path.isdir("players/" + x)]
 
@@ -46,7 +48,7 @@ if __name__ == '__main__':
 
 
         # What we want is to run the script
-        results = subprocess.Popen(["java", "-jar", "engine_1.4.jar"], stdout=subprocess.PIPE)
+        results = subprocess.Popen(["java", "-jar", "engine_1.6.jar"], stdout=subprocess.PIPE)
         out, err = results.communicate()
 
         out_lines = [x.strip() for x in out.split('\n')]
@@ -90,6 +92,9 @@ if __name__ == '__main__':
                     last_result = [(p1name.strip(), int(p1val)),
                                    (p2name.strip(), int(p2val)),
                                    (p3name.strip(), int(p3val))]
+                    p1name = p1name.strip()
+                    p2name = p2name.strip()
+                    p3name = p3name.strip()
             f.close()
             game_result = sorted(last_result, key=lambda x: x[1], reverse=True)
             game_results.append(game_result)
@@ -160,7 +165,7 @@ th, td {
         "<td>%d</td><td>%f</td></tr>\n" \
             % (scores[score], mean))
 
-        f.write("</table></body></html>")
+        f.write("</table><p>Simulations started at: %s\nLast updated at : %s</body></html>" % (str(start_time), str(datetime.now())))
         f.close()
 
 
