@@ -24,10 +24,15 @@ if __name__ == '__main__':
         new_dirs = [x for x in os.listdir("players") if os.path.isdir("players/" + x)]
         if new_dirs != dirs:
             dirs = new_dirs
-            scores = {}
-            wins = {}
-            seconds = {}
-            lasts = {}
+            scores = {'RANDOM': 0}
+            wins = {'RANDOM': 0}
+            seconds = {'RANDOM': 0}
+            lasts = {'RANDOM': 0}
+	    for d in dirs:
+                scores[d] = 0
+                wins[d] = 0
+                seconds[d] = 0
+                lasts[d] = 0
 
         config = file("config.txt", "w")
         config.write("BIG_BLIND = 2\nSTARTING_STACK = 200\nNUMBER_OF_HANDS = 1000\n")
@@ -89,9 +94,12 @@ if __name__ == '__main__':
                     p1name, p1val = p1.replace(')', '').split('(')
                     p2name, p2val = p2.replace(')', '').split('(')
                     p3name, p3val = p3.replace(')', '').split('(')
-                    p1name = p1name.strip()[:-1]
-                    p2name = p2name.strip()[:-1]
-                    p3name = p3name.strip()[:-1]
+                    p1name = p1name.strip()
+                    p2name = p2name.strip()
+                    p3name = p3name.strip()
+                    if p1name not in dirs: p1name = p1name[:-1]
+                    if p2name not in dirs: p2name = p2name[:-1]
+                    if p3name not in dirs: p3name = p3name[:-1]
                     last_result = [(p1name.strip(), int(p1val)),
                                    (p2name.strip(), int(p2val)),
                                    (p3name.strip(), int(p3val))]
@@ -165,7 +173,7 @@ th, td {
         "<td>%d</td><td>%f</td></tr>\n" \
             % (scores[score], mean))
 
-        f.write("</table><p>Simulations started at: %s\nLast updated at : %s</body></html>" % (str(start_time), str(datetime.now())))
+        f.write("</table><p>Simulations started at: %s</p><p>Last updated at : %s</p></body></html>" % (str(start_time), str(datetime.now())))
         f.close()
 
 
