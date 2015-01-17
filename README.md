@@ -29,3 +29,4 @@ Version Log
 | v0        |1/14   | First working player to beat random   |
 | v1        |1/15   | Improved flop play                    |
 | v2        |1/16   | Imporved turn play                    |
+| v3        |1/17   | Imporved river play                   |
