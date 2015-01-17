@@ -62,7 +62,7 @@ if __name__ == '__main__':
 
         for i in range(1, 4):
             current = l.pop(0)
-            if current == "random":
+            if current == "RANDOM":
                 config.write("PLAYER_%d_TYPE = RANDOM\nPLAYER_%d_NAME = RANDOM\n" % (i, i))
             else:
                 config.write("PLAYER_%d_TYPE = FOLDER\nPLAYER_%d_NAME = %s\n" % (i, i, l[i]))
