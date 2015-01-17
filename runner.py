@@ -24,15 +24,17 @@ if __name__ == '__main__':
         new_dirs = [x for x in os.listdir("players") if os.path.isdir("players/" + x)]
         if new_dirs != dirs:
             dirs = new_dirs
-            scores = {'RANDOM': 0}
-            wins = {'RANDOM': 0}
-            seconds = {'RANDOM': 0}
-            lasts = {'RANDOM': 0}
+            if 'RANDOM' not in scores:
+                scores = {'RANDOM': 0}
+                wins = {'RANDOM': 0}
+                seconds = {'RANDOM': 0}
+                lasts = {'RANDOM': 0}
 	    for d in dirs:
-                scores[d] = 0
-                wins[d] = 0
-                seconds[d] = 0
-                lasts[d] = 0
+                if d not in scores:
+                    scores[d] = 0
+                    wins[d] = 0
+                    seconds[d] = 0
+                    lasts[d] = 0
 
         config = file("config.txt", "w")
         config.write("BIG_BLIND = 2\nSTARTING_STACK = 200\nNUMBER_OF_HANDS = 1000\n")
@@ -43,7 +45,9 @@ if __name__ == '__main__':
         l = dirs + ["random"]
         random.shuffle(l)
         for i in range(1, 4):
-            current = l[i]
+            # TODO: let the newer bots play catch up
+            # TODO: be able to retire certain bots
+            current = l.pop(0)
             if current == "random":
                 config.write("PLAYER_%d_TYPE = RANDOM\nPLAYER_%d_NAME = RANDOM\n" % (i, i))
             else:
