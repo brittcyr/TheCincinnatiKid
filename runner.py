@@ -13,7 +13,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
     start_time = datetime.now()
 
-    dirs = [x for x in os.listdir("players") if os.path.isdir("players/" + x)]
+    dirs = []
 
     scores = {}
     wins = {}
@@ -150,7 +150,7 @@ th, td {
         for score in sorted(scores.keys()):
             print '%s:\t%d' % (score, scores[score])
             count = sum([wins[score], seconds[score], lasts[score]])
-            mean = float(scores[score]) / count
+            mean = float(scores[score]) / count if count != 0 else 0
             f.write(
         "<tr><td>%s</td><td>%d</td><td>%d</td><td>%d</td><td>%d</td>" \
             % (score, wins[score], seconds[score], lasts[score], count))
