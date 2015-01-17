@@ -29,7 +29,7 @@ if __name__ == '__main__':
 
         config = file("config.txt", "w")
         config.write("BIG_BLIND = 2\nSTARTING_STACK = 200\nNUMBER_OF_HANDS = 1000\n")
-        config.write("CONNECTION_TIMEOUT = 2\nTIME_RESTRICTION_PER_GAME = 10\n")
+        config.write("CONNECTION_TIMEOUT = 2\nTIME_RESTRICTION_PER_GAME = 100\n")
         config.write("ENFORCE_TIMING_RESTRICTION = true\nDISPLAY_ILLEGAL_ACTIONS = true\n")
         config.write("TRIPLICATE = true\nHAND_LOG_FILEPATH = ./hand_logs\n")
 
@@ -56,12 +56,14 @@ if __name__ == '__main__':
                 g = open(file_name)
                 for line in g:
                     if '### ILLEGAL ACTION' in line and 'trunk' in line:
-                        h = open('ILLEGAL_TRUNK_ACTIONS', 'a')
-                        h.write(file_name + '\n')
-                        h.close()
 			srcfile = './trunk.dump'
 			file_name = file_name.split('./hand_logs/')[1]
 			shutil.copy(srcfile, './replayer/failures/' + file_name)
+			print out, err, 'BAD TRUNK ACTION'
+
+                        h = open('ILLEGAL_TRUNK_ACTIONS', 'a')
+                        h.write(file_name + '\n')
+                        h.close()
 			break
                 g.close()
 
