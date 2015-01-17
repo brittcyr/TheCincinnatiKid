@@ -63,7 +63,7 @@ BLUFF_AT_SCARY_BOARD = .05
 BLUFF_AT_REALLY_SCARY_BOARD = .15
 
 
-class Turn(object):
+class River(object):
 
     @classmethod
     def get_action(cls, data):
