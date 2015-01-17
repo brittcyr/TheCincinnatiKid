@@ -1,6 +1,7 @@
 import subprocess
 import argparse
 import os
+import os.path
 import shutil
 import random
 import math
@@ -42,15 +43,22 @@ if __name__ == '__main__':
         config.write("ENFORCE_TIMING_RESTRICTION = true\nDISPLAY_ILLEGAL_ACTIONS = true\n")
         config.write("TRIPLICATE = true\nHAND_LOG_FILEPATH = ./hand_logs\n")
 
-        l = dirs + ["random"]
+        l = dirs + ["RANDOM"]
 
-        f = open('retired.txt', 'r')
-        retired = []
-        for line in f:
-            retired.append(line.strip())
-        f.close()
-        l = [x for x in l if x not in retired]
+        if os.path.isfile('retired.txt'):
+            f = open('retired.txt', 'r')
+            retired = []
+            for line in f:
+                retired.append(line.strip())
+            f.close()
+            l = [x for x in l if x not in retired]
+
         random.shuffle(l)
+
+        # Find the one that has played the least and force it into the first position
+        uses = [(wins[x] + seconds[x] + lasts[x], x) for x in l]
+        (uses, bot) = min(uses)
+        l.insert(0, l.pop(l.index(bot)))
 
         for i in range(1, 4):
             current = l.pop(0)
