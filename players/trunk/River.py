@@ -48,6 +48,17 @@ def board_correlation(board_cards):
     return max(flush_correlation(board_cards), \
             straight_correlation(board_cards))
 
+DECK = 52
+def i_has_the_nuts(hole, board_cards):
+    my_score = score_best_five(hole + board_cards)
+    for card1 in range(DECK):
+        if card1 in hole or card1 in board_cards: continue
+        for card2 in range(card1 + 1, DECK):
+            if card2 in hole or card1 in board_cards: continue
+            if my_score < score_best_five([card1 + card2] + board_cards):
+                return False
+    return True
+
 
 VAL_OF_OUT = .02174 # 1 / 46
 PAIR_ODDS = {0: .05, 1: .1, 2: .15, 3: .2, 4: .25, 5: .3, 6: .35, 7: .4, 8: .5, 9: .8, 10: 1.0}

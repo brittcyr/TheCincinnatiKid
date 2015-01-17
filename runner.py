@@ -57,11 +57,12 @@ if __name__ == '__main__':
 
         # Find the one that has played the least and force it into the first position
         uses = [(wins[x] + seconds[x] + lasts[x], x) for x in l]
+        print uses
         (uses, bot) = min(uses)
-        l.insert(0, l.pop(l.index(bot)))
+        l.insert(1, l.pop(l.index(bot)))
 
         for i in range(1, 4):
-            current = l.pop(0)
+            current = l[i]
             if current == "RANDOM":
                 config.write("PLAYER_%d_TYPE = RANDOM\nPLAYER_%d_NAME = RANDOM\n" % (i, i))
             else:
@@ -133,7 +134,7 @@ if __name__ == '__main__':
             seconds[second] += 1
             lasts[loser] += 1
 
-        print 'Finished %d sets of triplicate' % (iteration + 1)
+        #print 'Finished %d sets of triplicate' % (iteration + 1)
 
         f = open('../results.html', 'w')
         html = """
@@ -163,7 +164,7 @@ th, td {
 """
         f.write(html)
         for score in sorted(scores.keys()):
-            print '%s:\t%d' % (score, scores[score])
+            #print '%s:\t%d' % (score, scores[score])
             count = sum([wins[score], seconds[score], lasts[score]])
             mean = float(scores[score]) / count if count != 0 else 0
             f.write(
