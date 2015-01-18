@@ -1,7 +1,7 @@
-# TODO: two player
+import datetime
 
 def create_new_game_line(game_num, tournament_num):
-    return "Pokerstars Game #%d: Hold'em Pot Limit ($1/$2) - 2011/08/16 0:15:57 CET [2011/08/15 18:15:57 ET]\n" % (game_num)
+    return "Pokerstars Game #%d: Hold'em Pot Limit ($1/$2) - %s\n" % (game_num, datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
 
 def table():
     return "Table '1' 3-max Seat #1 is the button\n"

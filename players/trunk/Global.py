@@ -48,8 +48,12 @@ class State(object):
             cls.aggressiveness += .1
             return
 
-        # TODO: Consider if we are pot committed in the late game and should just go
-        # all in on anything
+        # If we are down to less than 8 big blinds, go for broke. This should
+        # probably be turned off later, but if it worked, then stick with it.
+        if cls.bb * 8 > cls.stackSize:
+            cls.aggressiveness *= 2
+            cls.looseness *= 2
+            return
 
     @classmethod
     def new_game(cls, data):
