@@ -59,6 +59,15 @@ def i_has_the_nuts(hole, board_cards):
                 return False
     return True
 
+NOT_PAIRED_BOARD = -1
+def paired_board(board):
+    board = sorted([x / 4 for x in board])
+    if board[1] == board[0] or board[1] == board[2]:
+        return board[1]
+    if board[2] == board[3] or board[3] == board[4]:
+        return board[3]
+    return NOT_PAIRED_BOARD
+
 
 VAL_OF_OUT = .02174 # 1 / 46
 PAIR_ODDS = {0: .05, 1: .1, 2: .15, 3: .2, 4: .25, 5: .3, 6: .35, 7: .4, 8: .45, 9: .5, 10: .75}
@@ -148,8 +157,11 @@ class River(object):
                 if i_called: return try_to_check(legal_actions)
 
                 if score[0] >= TWO_PAIR:
-                    bet_amt = max(min(int(hi * State.aggressiveness), hi), lo)
-                    return 'BET:%d' % bet_amt
+                    if paired_board(board_cards) == NOT_PAIRED_BOARD:
+                        bet_amt = max(min(int(hi * State.aggressiveness), hi), lo)
+                        return 'BET:%d' % bet_amt
+                    else:
+                        return 'BET:%d' % lo
 
                 if score[0] >= PAIR and quick_check_if_hole_helps(score, board_cards) and \
                         classify_pair_river(board_cards, score) >= 5:
@@ -200,8 +212,12 @@ class River(object):
                     if not quick_check_if_hole_helps(score, board_cards):
                         guessed_win_prob *= .5
                 elif score[0] == TWO_PAIR:
-                    guessed_win_prob += .6
-                    guessed_win_prob += .04 * score[1]
+                    if paired_board(board_cards) != NOT_PAIRED_BOARD:
+                        guessed_win_prob = .3
+                        guessed_win_prob += .08 * (score[1] - paired_board(board_cards))
+                    else:
+                        guessed_win_prob += .6
+                        guessed_win_prob += .04 * score[1]
 
                 # Drop our odds if there is a scary board
                 correlation = board_correlation(board_cards)

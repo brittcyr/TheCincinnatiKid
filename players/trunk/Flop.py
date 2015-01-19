@@ -47,6 +47,13 @@ def board_correlation(board_cards):
     return max(flush_correlation(board_cards), \
             straight_correlation(board_cards))
 
+NOT_PAIRED_BOARD = -1
+def paired_board(board):
+    board = sorted([x / 4 for x in board])
+    if board[1] == board[0] or board[1] == board[2]:
+        return board[1]
+    return NOT_PAIRED_BOARD
+
 VAL_OF_OUT = .02127  * 1.5 # 1 / 47 * 1.5 to guess that we get another card
 PAIR_ODDS = {0: .1, 1: .2, 2: .4, 3: .6, 4: .7, 5: .9, 6: 1.0, -1: 0}
 HIGH_CARD = 0
@@ -129,8 +136,9 @@ class Flop(object):
                     return 'BET:%d' % hi
 
                 if score[0] >= TWO_PAIR:
-                    bet_amt = max(min(int((.25 + random()) * hi * State.aggressiveness), hi), lo)
-                    return 'BET:%d' % bet_amt
+                    if paired_board(board_cards) == NOT_PAIRED_BOARD:
+                        bet_amt = max(min(int((.25 + random()) * hi * State.aggressiveness), hi), lo)
+                        return 'BET:%d' % bet_amt
 
                 # Bet for at least middle pair
                 if score[0] >= PAIR and quick_check_if_hole_helps(score, board_cards) and \
@@ -169,8 +177,12 @@ class Flop(object):
                     if not quick_check_if_hole_helps(score, board_cards):
                         guessed_win_prob *= .5
                 elif score[0] == TWO_PAIR:
-                    guessed_win_prob += .7
-                    guessed_win_prob += .05 * score[1]
+                    if paired_board(board_cards) == NOT_PAIRED_BOARD:
+                        guessed_win_prob += .7
+                        guessed_win_prob += .05 * score[1]
+                    else:
+                        guessed_win_prob = .3
+                        guessed_win_prob += .08 * (score[1] - paired_board(board_cards))
 
                 # Drop our odds if there is a scary board
                 if board_correlation(board_cards) >= 3:
