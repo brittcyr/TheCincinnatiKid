@@ -240,6 +240,8 @@ class River(object):
                         return 'RAISE:%d' % bet_amt
 
                     if i_has_the_nuts:
+                        lo, hi = split_raise(legal_actions)
+                        if not lo: return call_action
                         return 'RAISE:%d' % hi
 
                     return call_action
