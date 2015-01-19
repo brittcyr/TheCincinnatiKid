@@ -222,6 +222,10 @@ class River(object):
                         else:
                             bet_amt = max(min(int(lo * State.aggressiveness), hi), lo)
                         return 'RAISE:%d' % bet_amt
+
+                    if i_has_the_nuts:
+                        return 'RAISE:%d' % hi
+
                     return call_action
                 return 'FOLD'
 
@@ -234,6 +238,9 @@ class River(object):
             if score[0] == THREE_OF_A_KIND and quick_check_if_hole_helps(score, board_cards):
                 bet_amt = max(min(int(random() * hi * State.aggressiveness), hi), lo)
                 return 'RAISE:%d' % bet_amt
+
+            if i_has_the_nuts:
+                return 'RAISE:%d' % hi
 
             return call_action
 
