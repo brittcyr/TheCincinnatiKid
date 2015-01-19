@@ -28,5 +28,6 @@ Version Log
 |-----------|:-----:|---------------------------------------|
 | v0        |1/14   | First working player to beat random   |
 | v1        |1/15   | Improved flop play                    |
-| v2        |1/16   | Imporved turn play                    |
-| v3        |1/17   | Imporved river play                   |
+| v2        |1/16   | Improved turn play                    |
+| v3        |1/17   | Improved river play                   |
+| v4        |1/19   | Devalued pair and two pair            |

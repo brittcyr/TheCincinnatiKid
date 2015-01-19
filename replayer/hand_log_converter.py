@@ -32,11 +32,12 @@ def table():
 def seats(p1name, p1val, p2name, p2val, p3name, p3val):
     seat1 = "Seat 1: %s (%d in chips)" % (p1name, p1val)
     seat2 = "Seat 2: %s (%d in chips)" % (p2name, p2val)
+    seats = seat1 + '\n' + seat2 + '\n'
     if Printer.player_three_in:
         seat3 = "Seat 3: %s (%d in chips)" % (p3name, p3val)
+        return seats + seat3 + '\n'
     else:
-        seat3 = ''
-    return seat1 + '\n' + seat2 + '\n' + seat3 + '\n'
+        return seats
 
 def blinds(sb, bb):
     small = '%s: posts small blind 1\n' % (sb)
