@@ -1,17 +1,20 @@
 import datetime
 import os
 
-# TODO: Fix the heads up blinds
-# TODO: Do not print players who are out. It confuses poker tracker
-
 class Printer(object):
     results = ''
     tourney_num = int(datetime.datetime.now().strftime("%s")) * 10000
     hand_num = int(datetime.datetime.now().strftime("%s")) * 10000
     player_three_in = True
+    loser = ''
+    second = ''
+    winner = ''
     @classmethod
     def reset(cls):
         cls.results = ''
+        cls.loser = ''
+        cls.second = ''
+        cls.winner = ''
 
     @classmethod
     def add_hand(cls, hand):
@@ -21,6 +24,13 @@ class Printer(object):
     def write_result(cls, file_name):
         f = open(file_name, 'w')
         f.write(cls.results)
+        f.write("Pokerstars Tournament #%d, Pot Limit Hold'em\n" % cls.tourney_num)
+        f.write("Buy-In: 80/0\n")
+        f.write("3 players\n")
+        f.write("Total Prize Pool: 240\n")
+        f.write("1: %s , 180\n" % cls.winner)
+        f.write("2: %s , 60\n" % cls.second)
+        f.write("3: %s \n" % cls.loser)
         f.close()
 
 def create_new_game_line(game_num, tournament_num):
@@ -37,6 +47,7 @@ def seats(p1name, p1val, p2name, p2val, p3name, p3val):
         seat3 = "Seat 3: %s (%d in chips)" % (p3name, p3val)
         return seats + seat3 + '\n'
     else:
+        Printer.loser = p3name
         return seats
 
 def blinds(sb, bb):
@@ -235,6 +246,12 @@ def parse_file(filename, hero):
                 final_pot -= pot_round_vals[-1]
                 final_pot += pot_round_vals[-2]
             prev_actions.append('%s collected %d from the pot' % (winner, final_pot))
+            if winner == p1name:
+                Printer.winner = winner
+                Printer.second = p2name
+            if winner == p2name:
+                Printer.winner = winner
+                Printer.second = p1name
 
         if 'ties' in line:
             player = line.split('ties')[0].split()[0]
