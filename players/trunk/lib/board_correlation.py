@@ -6,6 +6,16 @@ whether or not to play a hand and how to play it.
 
 # This is to determine how many cards are needed for a straight
 def straight_correlation(board):
+    """figure out how close the board is to a straight
+
+    Determine how many cards are needed for a straight
+
+    Args:
+        board: list of cards in integer form
+
+    Returns:
+        integer with the most cards in a possible straight
+    """
     board = set([x / 4 for x in board])
     # Consider each of the 8 straights separately
 
@@ -27,6 +37,16 @@ def straight_correlation(board):
 
 
 def flush_correlation(board):
+    """figure out how close the board is to a flush
+
+    Determine how many cards are needed for a flush
+
+    Args:
+        board: list of cards in integer form
+
+    Returns:
+        integer with the most cards in a possible flush
+    """
     board = sorted([x % 4 for x in board])
     return max([board.count(0), board.count(1), \
             board.count(2), board.count(3)])
