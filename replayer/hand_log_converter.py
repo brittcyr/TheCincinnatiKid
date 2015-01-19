@@ -8,6 +8,7 @@ class Printer(object):
     results = ''
     tourney_num = int(datetime.datetime.now().strftime("%s")) * 10000
     hand_num = int(datetime.datetime.now().strftime("%s")) * 10000
+    player_three_in = True
     @classmethod
     def reset(cls):
         cls.results = ''
@@ -31,7 +32,10 @@ def table():
 def seats(p1name, p1val, p2name, p2val, p3name, p3val):
     seat1 = "Seat 1: %s (%d in chips)" % (p1name, p1val)
     seat2 = "Seat 2: %s (%d in chips)" % (p2name, p2val)
-    seat3 = "Seat 3: %s (%d in chips)" % (p3name, p3val)
+    if Printer.player_three_in:
+        seat3 = "Seat 3: %s (%d in chips)" % (p3name, p3val)
+    else:
+        seat3 = ''
     return seat1 + '\n' + seat2 + '\n' + seat3 + '\n'
 
 def blinds(sb, bb):
@@ -129,12 +133,19 @@ def parse_file(filename, hero):
             numActive = 2
             holes = {}
             p1name, p1val, p2name, p2val, p3name, p3val = parse_hand_line(line)
-            pot_round = {p2name: 1, p3name: 2}
+            # TODO: Fix the blinds for two player
             showdown = False
             hand_num = int(line.split('#')[1].split(',')[0])
 
             if all([p1name, p2name, p3name]):
                 numActive = 3
+
+            if int(p3val) == 0:
+                Printer.player_three_in = False
+                pot_round = {p1name: 1, p2name: 2}
+            else:
+                Printer.player_three_in = True
+                pot_round = {p2name: 1, p3name: 2}
 
             if p1name == hero: seat = 1
             elif p2name == hero: seat = 2
@@ -248,7 +259,8 @@ def do_print(p1name, p1val, p2name, p2val, p3name, p3val, hero, prev_actions, he
 
     hand_str += '*** HOLE CARDS ***\n'
     for hole_player in holes:
-        hand_str += hole(holes[hole_player], hole_player)
+        if hole_player == p3name and Printer.player_three_in:
+            hand_str += hole(holes[hole_player], hole_player)
     for action in prev_actions:
         if 'POST' in action: continue
         hand_str += action + '\n'
@@ -265,8 +277,8 @@ def do_print(p1name, p1val, p2name, p2val, p3name, p3val, hero, prev_actions, he
     hand_str += "Seat 2: %s (small blind)\n" % (p2name)
     if int(p3val) > 0:
         hand_str += "Seat 3: %s (big blind)\n" % (p3name)
-    else:
-        hand_str += "Seat 3: %s\n" % (p3name)
+    #else:
+    #    hand_str += "Seat 3: %s\n" % (p3name)
 
     hand_str += '\n'
     Printer.add_hand(hand_str)
