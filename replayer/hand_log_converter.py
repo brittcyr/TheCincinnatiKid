@@ -1,7 +1,26 @@
 import datetime
+import os
+
+class Printer(object):
+    results = ''
+    tourney_num = int(datetime.datetime.now().strftime("%s")) * 10000
+    hand_num = int(datetime.datetime.now().strftime("%s")) * 10000
+    @classmethod
+    def reset(cls):
+        cls.results = ''
+
+    @classmethod
+    def add_hand(cls, hand):
+        cls.results += hand
+
+    @classmethod
+    def write_result(cls, file_name):
+        f = open(file_name, 'w')
+        f.write(cls.results)
+        f.close()
 
 def create_new_game_line(game_num, tournament_num):
-    return "Pokerstars Game #%d: Hold'em Pot Limit ($1/$2) - %s\n" % (game_num, datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+    return "Pokerstars Game #%d: Tournament #%d, Hold'em Pot Limit ($1/$2) - %s\n" % (Printer.hand_num, tournament_num, datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S ET"))
 
 def table():
     return "Table '1' 3-max Seat #1 is the button\n"
@@ -54,14 +73,21 @@ def parse_action_line(action_line):
     # Possible actions are BET CALL CHECK FOLD RAISE DEAL
     if ' calls ' in action_line:
         action = 'CALL:%s:%s' % (action_line.split()[-1], player)
+        return action
     if ' checks' in action_line:
         action = 'CHECK:%s' % (player)
+        return action
     if ' bets ' in action_line:
         action = 'BET:%s:%s' % (action_line.split()[-1], player)
+        return action
     if ' raises ' in action_line:
         action = 'RAISE:%s:%s' % (action_line.split()[-1], player)
+        return action
     if ' fold' in action_line:
         action = 'FOLD:%s' % (player)
+        return action
+    if ' returned ' in action_line:
+        return ''
     return action
 
 
@@ -125,6 +151,7 @@ def parse_file(filename, hero):
 
         if 'calls' in line or 'raises' in line or 'checks' in line or 'folds' in line or 'bet' in line:
             action = parse_action_line(line)
+            if not action: continue
             if hero == action.split(':')[-1]:
                 potsize = sum(pot_round.values()) + pot
 
@@ -207,7 +234,7 @@ def parse_file(filename, hero):
 
 
 def do_print(p1name, p1val, p2name, p2val, p3name, p3val, hero, prev_actions, hero_hole, hand_num, pot_size, board, holes):
-    hand_str = create_new_game_line(hand_num, 1)
+    hand_str = create_new_game_line(hand_num, Printer.tourney_num)
     hand_str += table()
     hand_str += seats(p1name, p1val, p2name, p2val, p3name, p3val)
     if int(p3val) == 0:
@@ -216,7 +243,6 @@ def do_print(p1name, p1val, p2name, p2val, p3name, p3val, hero, prev_actions, he
         hand_str += blinds(p2name, p3name)
 
     hand_str += '*** HOLE CARDS ***\n'
-#    hand_str += hole(hero_hole, hero)
     for hole_player in holes:
         hand_str += hole(holes[hole_player], hole_player)
     for action in prev_actions:
@@ -238,7 +264,16 @@ def do_print(p1name, p1val, p2name, p2val, p3name, p3val, hero, prev_actions, he
     else:
         hand_str += "Seat 3: %s\n" % (p3name)
 
-    print hand_str
+    hand_str += '\n'
+    Printer.add_hand(hand_str)
+    Printer.hand_num += 1
 
 if __name__ == '__main__':
-    parse_file('match_RANDOM_trunk_v3_01_18_11_45_27_5775.txt', 'trunk')
+    prefix = '../hand_logs/Day6Seat1/'
+    files = os.listdir(prefix)
+    for filename in files:
+        Printer.reset()
+        parse_file(prefix + filename, 'TheCincinnatiKid')
+        results_prefix = './results/'
+        Printer.write_result(results_prefix + filename)
+        Printer.tourney_num += 1
