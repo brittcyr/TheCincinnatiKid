@@ -57,7 +57,7 @@ def board_correlation(board_cards):
 
 
 VAL_OF_OUT = .02174 # 1 / 46
-PAIR_ODDS = {0: .1, 1: .2, 2: .3, 3: .4, 4: .5, 5: .6, 6: .7, 7: .9, 8: 1.0}
+PAIR_ODDS = {0: .1, 1: .2, 2: .25, 3: .35, 4: .45, 5: .5, 6: .55, 7: .7, 8: .9}
 HIGH_CARD = 0
 PAIR = 1
 TWO_PAIR = 2

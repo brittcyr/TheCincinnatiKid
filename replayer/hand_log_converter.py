@@ -1,6 +1,9 @@
 import datetime
 import os
 
+# TODO: Fix the heads up blinds
+# TODO: Do not print players who are out. It confuses poker tracker
+
 class Printer(object):
     results = ''
     tourney_num = int(datetime.datetime.now().strftime("%s")) * 10000
