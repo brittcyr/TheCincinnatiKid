@@ -67,6 +67,9 @@ class State(object):
         cls.num_hands = int(numHands)
         cls.timeBank = float(timeBank)
 
+        # TODO: Consider adjusting aggressiveness and looseness based upon
+        # who the opponents are
+
 
     @classmethod
     def new_hand(cls, data):
