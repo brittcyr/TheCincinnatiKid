@@ -62,7 +62,7 @@ def paired_board(board):
         return board[1]
     if board[2] == board[3]:
         return board[2]
-    return PAIRED_BOARD
+    return NOT_PAIRED_BOARD
 
 
 VAL_OF_OUT = .02174 # 1 / 46
