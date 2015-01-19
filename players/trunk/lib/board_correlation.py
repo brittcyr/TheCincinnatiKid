@@ -1,6 +1,8 @@
-
-
-
+"""
+This is a library of hand heuristic evaluator helpers. These functions
+are used in the intermediate evaluation of hand quality to decide
+whether or not to play a hand and how to play it.
+"""
 
 # This is to determine how many cards are needed for a straight
 def straight_correlation(board):
