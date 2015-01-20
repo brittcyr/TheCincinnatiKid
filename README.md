@@ -31,3 +31,4 @@ Version Log
 | v2        |1/16   | Improved turn play                    |
 | v3        |1/17   | Improved river play                   |
 | v4        |1/19   | Devalued pair and two pair            |
+| v5        |1/20   | Changing constants and devalue pair   |
