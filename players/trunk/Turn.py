@@ -66,7 +66,7 @@ def paired_board(board):
 
 
 VAL_OF_OUT = .02174 # 1 / 46
-PAIR_ODDS = {0: .1, 1: .2, 2: .25, 3: .35, 4: .45, 5: .5, 6: .55, 7: .7, 8: .9}
+PAIR_ODDS = {0: .1, 1: .2, 2: .25, 3: .3, 4: .45, 5: .5, 6: .55, 7: .7, 8: .9}
 HIGH_CARD = 0
 PAIR = 1
 TWO_PAIR = 2
@@ -232,6 +232,8 @@ class Turn(object):
                                     * State.aggressiveness), hi), lo)
                         else:
                             bet_amt = max(min(int(lo * State.aggressiveness), hi), lo)
+
+                        # TODO: Consider reverse pot odds
                         return 'RAISE:%d' % bet_amt
                     return call_action
                 return 'FOLD'

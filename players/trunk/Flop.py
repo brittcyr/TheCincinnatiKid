@@ -204,6 +204,8 @@ class Flop(object):
                                     * State.aggressiveness), hi), lo)
                         else:
                             bet_amt = max(min(int(lo * State.aggressiveness), hi), lo)
+
+                        # TODO: Consider reverse implied odds
                         return 'RAISE:%d' % bet_amt
                     return call_action
                 return 'FOLD'
