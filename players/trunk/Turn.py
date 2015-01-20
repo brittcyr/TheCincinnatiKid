@@ -200,7 +200,7 @@ class Turn(object):
                     val = classify_pair_turn(board_cards, score)
                     guessed_win_prob += PAIR_ODDS[val]
                     if not quick_check_if_hole_helps(score, board_cards):
-                        guessed_win_prob *= .5
+                        guessed_win_prob *= .25
                 elif score[0] == TWO_PAIR:
                     if paired_board(board_cards) != NOT_PAIRED_BOARD:
                         guessed_win_prob = .3
