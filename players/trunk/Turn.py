@@ -158,6 +158,13 @@ class Turn(object):
                     bet_amt = max(min(int(hi * State.aggressiveness), hi), lo)
                     return 'BET:%d' % bet_amt
 
+                if board_correlation(board_cards) >= 3:
+                    # Price out the flushes
+                    nine_out_rev_pot_odds = .04 * 9
+                    bet_amt = nine_out_rev_pot_odds * potSize / (1 - nine_out_rev_pot_odds)
+                    bet_amt = max(min(int(bet_amt * State.aggressiveness), hi), lo)
+                    return 'BET:%d' % bet_amt
+
                 # Bet for at least middle pair
                 if score[0] >= PAIR and quick_check_if_hole_helps(score, board_cards) and \
                         classify_pair_turn(board_cards, score) >= 5:
@@ -233,7 +240,6 @@ class Turn(object):
                         else:
                             bet_amt = max(min(int(lo * State.aggressiveness), hi), lo)
 
-                        # TODO: Consider reverse pot odds
                         return 'RAISE:%d' % bet_amt
                     return call_action
                 return 'FOLD'

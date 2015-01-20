@@ -137,7 +137,17 @@ class Flop(object):
 
                 if score[0] == TWO_PAIR:
                     if paired_board(board_cards) == NOT_PAIRED_BOARD:
-                        bet_amt = max(min(int((.3 + random()) * hi * State.aggressiveness), hi), lo)
+                        bet_amt = max(min(int((.3 + random()) * hi * \
+                                State.aggressiveness), hi), lo)
+                        if board_correlation(board_cards) >= 3:
+                            # Price out the flushes
+                            nine_out_rev_pot_odds = .04 * 9
+                            reverse_bet_amt = nine_out_rev_pot_odds * \
+                                    potSize / (1 - nine_out_rev_pot_odds)
+                            reverse_bet_amt = max(min(int(bet_amt * \
+                                    State.aggressiveness), hi), lo)
+                            bet_amt = max(reverse_bet_amt, bet_amt)
+
                         return 'BET:%d' % bet_amt
 
                 # Bet for at least middle pair
@@ -203,9 +213,8 @@ class Flop(object):
                             bet_amt = max(min(int((1 + random()) / 2 * hi \
                                     * State.aggressiveness), hi), lo)
                         else:
-                            bet_amt = max(min(int(lo * State.aggressiveness), hi), lo)
+                            bet_amt = max(min(int(2 * lo * State.aggressiveness), hi), lo)
 
-                        # TODO: Consider reverse implied odds
                         return 'RAISE:%d' % bet_amt
                     return call_action
                 return 'FOLD'
@@ -217,8 +226,7 @@ class Flop(object):
                 return 'RAISE:%d' % hi
 
             if score[0] == THREE_OF_A_KIND and quick_check_if_hole_helps(score, board_cards):
-                bet_amt = hi
-                return 'RAISE:%d' % bet_amt
+                return 'RAISE:%d' % hi
 
             return call_action
 
