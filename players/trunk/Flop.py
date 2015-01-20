@@ -135,9 +135,9 @@ class Flop(object):
                 if score[0] >= STRAIGHT:
                     return 'BET:%d' % hi
 
-                if score[0] >= TWO_PAIR:
+                if score[0] == TWO_PAIR:
                     if paired_board(board_cards) == NOT_PAIRED_BOARD:
-                        bet_amt = max(min(int((.4 + random()) * hi * State.aggressiveness), hi), lo)
+                        bet_amt = max(min(int((.3 + random()) * hi * State.aggressiveness), hi), lo)
                         return 'BET:%d' % bet_amt
 
                 # Bet for at least middle pair
