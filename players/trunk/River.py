@@ -234,7 +234,7 @@ class River(object):
                         if not lo: return call_action
 
                         if 4 * pot_odds < guessed_win_prob:
-                            bet_amt = max(min(int(random() * hi * State.aggressiveness), hi), lo)
+                            bet_amt = hi
                         else:
                             bet_amt = max(min(int(lo * State.aggressiveness), hi), lo)
                         return 'RAISE:%d' % bet_amt
@@ -254,7 +254,12 @@ class River(object):
                 return 'RAISE:%d' % hi
 
             if score[0] == THREE_OF_A_KIND and quick_check_if_hole_helps(score, board_cards):
-                bet_amt = max(min(int(random() * hi * State.aggressiveness), hi), lo)
+                correlation = board_correlation(board_cards)
+                if correlation >= 4:
+                    bet_amt = lo
+                else:
+                    bet_amt = max(min(int((1 + random()) / 2 * hi * \
+                            State.aggressiveness), hi), lo)
                 return 'RAISE:%d' % bet_amt
 
             if i_has_the_nuts:

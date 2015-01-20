@@ -277,8 +277,9 @@ def do_print(p1name, p1val, p2name, p2val, p3name, p3val, hero, prev_actions, he
 
     hand_str += '*** HOLE CARDS ***\n'
     for hole_player in holes:
-        if hole_player == p3name and Printer.player_three_in:
+        if (hole_player == p3name and Printer.player_three_in) or hole_player != p3name:
             hand_str += hole(holes[hole_player], hole_player)
+
     for action in prev_actions:
         if 'POST' in action: continue
         hand_str += action + '\n'
