@@ -119,6 +119,7 @@ class State(object):
         numLastActions = int(data.pop(0))
         for _ in range(numLastActions):
             last_actions.append(data.pop(0))
+        cls.hand_actions += last_actions
 
         cls.timeBank = float(data.pop(0))
 
