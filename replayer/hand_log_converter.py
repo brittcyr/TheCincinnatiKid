@@ -304,7 +304,7 @@ def do_print(p1name, p1val, p2name, p2val, p3name, p3val, hero, prev_actions, he
     Printer.hand_num += 1
 
 if __name__ == '__main__':
-    prefix = '../hand_logs/Day6/'
+    prefix = '../hand_logs/Day8/'
     files = os.listdir(prefix)
     for filename in files:
         Printer.reset()
