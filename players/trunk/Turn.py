@@ -109,6 +109,7 @@ class Turn(object):
         prev_actions = []
         for _ in range(numLastActions):
             prev_actions.append(data.pop(0))
+        State.hand_actions += prev_actions
 
         numLegalActions = int(data.pop(0))
 

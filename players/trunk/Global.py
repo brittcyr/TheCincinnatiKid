@@ -23,6 +23,7 @@ class State(object):
     stack3 = 0
     num_active = 0
     check_fold_to_win = False
+    hand_actions = []
 
 
     @classmethod
@@ -99,6 +100,7 @@ class State(object):
         cls.hole_cards = sorted([hole_card1, hole_card2])
 
         State.consider_time_of_game()
+        cls.hand_actions = []
 
 
     @classmethod
@@ -138,4 +140,7 @@ class State(object):
             folders = [x for x in last_actions if 'FOLD' in x]
             if numBoardCards >= 3 and folders:
                 cls.aggressiveness -= .05
+
+        # TODO: Parse the hand_actions and do statistics
+        print cls.hand_actions
 
