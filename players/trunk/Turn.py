@@ -248,12 +248,12 @@ class Turn(object):
             if not lo: return call_action
 
             if score[0] >= STRAIGHT:
-                if quick_check_if_hole_helps(score, board_cards):
-                    bet_amt = hi
+                prev_bets = [x for x in prev_actions if 'RAISE' in x or 'BET' in x]
+                multibet = len(prev_bets) >= 2
+                if quick_check_if_hole_helps(score, board_cards) and not multibet:
+                    return 'RAISE:%d' % hi
                 else:
-                    bet_amt = max(min(int((1 + random()) / 2 * hi \
-                            * State.aggressiveness), hi), lo)
-                return 'RAISE:%d' % bet_amt
+                    return call_action
 
             if score[0] == THREE_OF_A_KIND and quick_check_if_hole_helps(score, board_cards):
                 correlation = board_correlation(board_cards)

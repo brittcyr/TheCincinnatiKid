@@ -315,10 +315,14 @@ class Preflop(object):
             if not call_action: return 'CHECK'
 
             call_amt = int(call_action[0].split(':')[-1])
-            pot_odds = float(call_amt) / (2 * call_amt + potSize)
+            pot_odds = float(call_amt) / (call_amt + potSize)
 
             # If we only called and do not have a great hand, reduce our odds
             if numActivePlayers == THREE_PLAYERS: hand_score = hand_score ** 2
+
+            prev_bets = [x for x in prev_actions if 'RAISE' in x or 'BET' in x]
+            numBets = len(prev_bets)
+            hand_score = hand_score ** numBets
 
             return call_action[0] if pot_odds < hand_score else 'FOLD'
 
@@ -333,10 +337,14 @@ class Preflop(object):
             if not call_action: return 'CHECK'
 
             call_amt = int(call_action[0].split(':')[-1])
-            pot_odds = float(call_amt) / (2 * call_amt + potSize)
+            pot_odds = float(call_amt) / (call_amt + potSize)
 
             # If we only called and do not have a great hand, reduce our odds
             if numActivePlayers == THREE_PLAYERS: hand_score = hand_score ** 2
+
+            prev_bets = [x for x in prev_actions if 'RAISE' in x or 'BET' in x]
+            numBets = len(prev_bets)
+            hand_score = hand_score ** numBets
 
             return try_to_call(legal_actions) if pot_odds < hand_score else 'FOLD'
 
