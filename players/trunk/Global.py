@@ -56,6 +56,11 @@ class State(object):
             cls.looseness *= 2
             return
 
+        # If I have lots more than the rest of the table
+        if 2 * rest < cls.stackSize:
+            cls.looseness = .7
+            return
+
     @classmethod
     def new_game(cls, data):
         new_game, yourName, opp1Name, opp2Name, stackSize, bb, \
