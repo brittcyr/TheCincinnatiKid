@@ -113,51 +113,31 @@ class HoleScorer(object):
     @classmethod
     def score_hole(self, hole, numActivePlayers):
         if numActivePlayers == 2:
-            scores_for_two = []
+            two_player_percentiles = {}
             f = open('lib/two_handed_results.csv', 'r')
             for line in f:
                 line = line.strip()
-                [lo, hi, suited, wins, losses, percent] = line.split(',')
+                [lo, hi, suited, percentile] = line.split(',')
                 lo = int(lo.replace('(', ''))
                 hi = int(hi)
-                wins = int(wins)
-                losses = int(losses)
-                percent = float(percent)
+                percent = float(percentile)
                 suited = 'T' in suited.replace(')', '')
-                scores_for_two.append([percent, lo, hi, suited, wins, losses])
+                two_player_percentiles[(lo, hi, suited)] = percent
             f.close()
-
-            two_player_percentiles = {}
-            scores_for_two.sort()
-            total_plays = sum([x[4] + x[5] for x in scores_for_two])
-            cum_plays = 0
-            for [percent, lo, hi, suited, wins, losses] in scores_for_two:
-                two_player_percentiles[(lo, hi, suited)] = float(cum_plays) / total_plays
-                cum_plays += (wins + losses)
 
             return two_player_percentiles[hole]
 
         if numActivePlayers == 3:
-            scores_for_three = []
+            three_player_percentiles = {}
             f = open('lib/three_handed_results.csv', 'r')
             for line in f:
                 line = line.strip()
-                [lo, hi, suited, wins, losses, percent] = line.split(',')
+                [lo, hi, suited, percentile] = line.split(',')
                 lo = int(lo.replace('(', ''))
                 hi = int(hi)
-                wins = int(wins)
-                losses = int(losses)
-                percent = float(percent)
+                percent = float(percentile)
                 suited = 'T' in suited.replace(')', '')
-                scores_for_three.append([percent, lo, hi, suited, wins, losses])
+                three_player_percentiles[(lo, hi, suited)] = percent
             f.close()
-
-            three_player_percentiles = {}
-            scores_for_three.sort()
-            total_plays = sum([x[4] + x[5] for x in scores_for_three])
-            cum_plays = 0
-            for [percent, lo, hi, suited, wins, losses] in scores_for_three:
-                three_player_percentiles[(lo, hi, suited)] = float(cum_plays) / total_plays
-                cum_plays += (wins + losses)
 
             return three_player_percentiles[hole]
