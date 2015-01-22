@@ -132,6 +132,7 @@ class River(object):
         # These are the variables based on position
         score = score_best_five(board_cards + State.hole_cards)
         i_called = 'CALL' in prev_actions[0]
+        i_got_the_nuts = i_has_the_nuts(hole, board_cards)
 
         # CHECK / BET           1
         # CALL / FOLD / RAISE   2
@@ -143,6 +144,12 @@ class River(object):
         if any([x for x in legal_actions if 'CHECK' in x]):
             lo, hi = split_raise(legal_actions)
             if not lo: return try_to_check(legal_actions)
+
+            # Max bet the nuts
+            if i_got_the_nuts:
+                lo, hi = split_raise(legal_actions)
+                if not lo: return call_action
+                return 'BET:%d' % hi
 
             # We bet if we have more than a pair
             if score[0] > PAIR and quick_check_if_hole_helps(score, board_cards):
@@ -243,7 +250,7 @@ class River(object):
                             bet_amt = max(min(int(lo * State.aggressiveness), hi), lo)
                         return 'RAISE:%d' % bet_amt
 
-                    if i_has_the_nuts:
+                    if i_got_the_nuts:
                         lo, hi = split_raise(legal_actions)
                         if not lo: return call_action
                         return 'RAISE:%d' % hi
@@ -266,7 +273,7 @@ class River(object):
                             State.aggressiveness), hi), lo)
                 return 'RAISE:%d' % bet_amt
 
-            if i_has_the_nuts:
+            if i_got_the_nuts:
                 return 'RAISE:%d' % hi
 
             return call_action
