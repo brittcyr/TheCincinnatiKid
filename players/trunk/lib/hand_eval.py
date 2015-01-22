@@ -104,7 +104,7 @@ def is_royal_flush(hand):
     Returns:
         boolean whether it is a royal flush
     """
-    return hand[-1] >= 48 and is_straight_flush(hand)
+    return hand[-2] >= 44 and is_straight_flush(hand)
 
 def is_straight_flush(hand):
     """check if there is a straight flush in the hand
@@ -210,17 +210,17 @@ def eval_hand(hand):
     hand.sort()
 
     if is_royal_flush(hand):
-        return (9)
+        return (9,)
+
+    if is_straight_flush(hand):
+        hand = [card / 4 for card in hand]
+        return (8, hand[4])
 
     if is_four_of_a_kind(hand):
         hand = [card / 4 for card in hand]
         if hand[0] == hand[1]:
-            return (8, hand[0] / 4, hand[4])
-        return (8, hand[4] / 4, hand[0])
-
-    if is_straight_flush(hand):
-        hand = [card / 4 for card in hand]
-        return (7, hand[4])
+            return (7, hand[0] / 4, hand[4])
+        return (7, hand[4] / 4, hand[0])
 
     if is_full_house(hand):
         hand = [card / 4 for card in hand]
