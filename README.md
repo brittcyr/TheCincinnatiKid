@@ -20,6 +20,11 @@ It will automatically pull the bots and run them.
 Then there will be a result.html up a directory which will have the 
 table of the results that gets updated every time a tournament finishes.
 
+###hand_log_converter.py
+This converts hand histories into pokerstars format.
+It does not properly handle sidepots but those are rare enough to
+not worry about. This is used to send the hands to pokertracker for
+statistical analysis.
 
 Version Log
 ===========
@@ -32,3 +37,4 @@ Version Log
 | v3        |1/17   | Improved river play                   |
 | v4        |1/19   | Devalued pair and two pair            |
 | v5        |1/20   | Changing constants and devalue pair   |
+| v6        |1/22   | Reset preflop hand rankings           |
