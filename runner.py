@@ -39,7 +39,7 @@ if __name__ == '__main__':
 
         config = open("config.txt", "w")
         config.write("BIG_BLIND = 2\nSTARTING_STACK = 200\nNUMBER_OF_HANDS = 1000\n")
-        config.write("CONNECTION_TIMEOUT = 5\nTIME_RESTRICTION_PER_GAME = 100\n")
+        config.write("CONNECTION_TIMEOUT = 15\nTIME_RESTRICTION_PER_GAME = 100\n")
         config.write("ENFORCE_TIMING_RESTRICTION = true\nDISPLAY_ILLEGAL_ACTIONS = true\n")
         config.write("TRIPLICATE = true\nHAND_LOG_FILEPATH = ./hand_logs\n")
 
