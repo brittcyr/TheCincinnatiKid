@@ -132,7 +132,7 @@ class River(object):
         # These are the variables based on position
         score = score_best_five(board_cards + State.hole_cards)
         i_called = 'CALL' in prev_actions[0]
-        i_got_the_nuts = i_has_the_nuts(hole, board_cards)
+        i_got_the_nuts = i_has_the_nuts(State.hole_cards, board_cards)
 
         # CHECK / BET           1
         # CALL / FOLD / RAISE   2
