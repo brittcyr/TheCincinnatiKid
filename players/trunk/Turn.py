@@ -183,7 +183,7 @@ class Turn(object):
                 if board_correlation(board_cards) >= 4 \
                         and not i_called:
                     if random() > BLUFF_AT_REALLY_SCARY_BOARD:
-                        bet_amt = max(min(int(2 * lo * State.aggressiveness), hi), lo)
+                        bet_amt = max(min(int(4 * lo * State.aggressiveness), hi), lo)
                         return 'BET:%d' % bet_amt
 
                 return 'CHECK'
