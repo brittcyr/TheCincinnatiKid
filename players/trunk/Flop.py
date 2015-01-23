@@ -138,7 +138,7 @@ class Flop(object):
 
                 if score[0] == TWO_PAIR:
                     if paired_board(board_cards) == NOT_PAIRED_BOARD:
-                        bet_amt = max(min(int((.3 + random()) * hi * \
+                        bet_amt = max(min(int((.5 + random()) * hi * \
                                 State.aggressiveness), hi), lo)
                         if board_correlation(board_cards) >= 3:
                             # Price out the flushes
