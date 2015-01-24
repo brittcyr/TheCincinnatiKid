@@ -81,7 +81,7 @@ class Preflop(object):
         active3 = data.pop(0)
 
         numActivePlayers = numActivePlayers - \
-                len([x for x in State.prev_actions if 'FOLD' in x])
+                len([x for x in State.hand_actions if 'FOLD' in x])
 
         numLastActions = int(data.pop(0))
 
