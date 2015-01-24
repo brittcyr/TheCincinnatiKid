@@ -51,11 +51,13 @@ def board_correlation(board_cards):
 DECK = 52
 def i_has_the_nuts(hole, board_cards):
     my_score = score_best_five(hole + board_cards)
+    counter = 0
     for card1 in range(DECK):
         if card1 in hole or card1 in board_cards: continue
         for card2 in range(card1 + 1, DECK):
             if card2 in hole or card1 in board_cards: continue
-            if my_score < score_best_five([card1 + card2] + board_cards):
+            counter += 1
+            if my_score < score_best_five([card1, card2] + board_cards):
                 return False
     return True
 
@@ -243,7 +245,6 @@ class River(object):
                 if pot_odds < guessed_win_prob:
                     prev_bets = [x for x in prev_actions if 'RAISE' in x or 'BET' in x]
                     multibet = len(prev_bets) >= 2
-                    print multibet, pot_odds, guessed_win_prob
                     if 2 * pot_odds < guessed_win_prob and not multibet:
                         lo, hi = split_raise(legal_actions)
                         if not lo: return call_action
