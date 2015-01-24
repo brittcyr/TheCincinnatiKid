@@ -230,7 +230,6 @@ class Preflop(object):
                     return try_to_check(legal_actions)
 
 
-
         ############################## Case 4 ##################################
         ########################################################################
         # Not big blind two players

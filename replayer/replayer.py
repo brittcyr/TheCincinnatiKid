@@ -32,7 +32,7 @@ def parse_file(filename, hero):
         if 'Hand #' in line:
             p1name, p1val, p2name, p2val, p3name, p3val = parse_hand_line(line)
 
-            if all([p1name, p2name, p3name]):
+            if min([int(x) for x in [p1val, p2val, p3val]]) > 0:
                 numActive = 3
 
             if p1name == hero:

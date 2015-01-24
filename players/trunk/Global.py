@@ -75,6 +75,7 @@ class State(object):
 
         # TODO: Consider adjusting aggressiveness and looseness based upon
         # who the opponents are
+        # TODO: Consider resetting aggressiveness and looseness
 
 
     @classmethod

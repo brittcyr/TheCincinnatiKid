@@ -145,7 +145,6 @@ def parse_file(filename, hero):
             numActive = 2
             holes = {}
             p1name, p1val, p2name, p2val, p3name, p3val = parse_hand_line(line)
-            # TODO: Fix the blinds for two player
             showdown = False
             hand_num = int(line.split('#')[1].split(',')[0])
 

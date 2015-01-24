@@ -282,6 +282,10 @@ class River(object):
                             State.aggressiveness), hi), lo)
                 return 'RAISE:%d' % bet_amt
 
+            if not quick_check_if_hole_helps(score, board_cards) and \
+                    max([x / 4 for x in State.hole_cards]) != 12:
+                return 'FOLD'
+
             if i_got_the_nuts:
                 return 'RAISE:%d' % hi
 
