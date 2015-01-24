@@ -135,6 +135,7 @@ class River(object):
         score = score_best_five(board_cards + State.hole_cards)
         i_called = 'CALL' in prev_actions[0]
         i_got_the_nuts = i_has_the_nuts(State.hole_cards, board_cards)
+        board_alone_score = score_best_five(board_cards)
 
         print 'River score', score
 
@@ -215,6 +216,10 @@ class River(object):
         #######################################################################
         # Need to decide if we should FOLD / CALL / RAISE
         if any([x for x in legal_actions if 'CALL' in x]):
+            # Never call a bet if we are playing the board
+            if board_alond_score == score:
+                return 'FOLD'
+
             # Compute pot odds
             call_action = [x for x in legal_actions if 'CALL' in x][0]
             call_amt = int(call_action.split(':')[-1])
