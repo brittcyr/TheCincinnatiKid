@@ -286,6 +286,8 @@ class River(object):
                 return 'RAISE:%d' % hi
 
             if score[0] == THREE_OF_A_KIND and quick_check_if_hole_helps(score, board_cards):
+                if board_alone_score[0] == score[0]:
+                    return 'FOLD'
                 correlation = board_correlation(board_cards)
                 if correlation >= 4:
                     bet_amt = lo
