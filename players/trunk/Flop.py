@@ -183,7 +183,7 @@ class Flop(object):
                 guessed_win_prob = 0
                 # HIGH CARD
                 if score[0] == HIGH_CARD:
-                    guessed_win_prob = float(score[1][0] / 4) / 40
+                    guessed_win_prob = max(State.hole_cards) / 4 * .01
                 elif score[0] == PAIR:
                     val = classify_pair_flop(board_cards, score)
                     guessed_win_prob += PAIR_ODDS[val]
