@@ -237,6 +237,11 @@ class River(object):
                     if not quick_check_if_hole_helps(score, board_cards):
                         guessed_win_prob *= .25
                 elif score[0] == TWO_PAIR:
+                    if board_alone_score[0] == TWO_PAIR:
+                        if board_alone_score[1] < score[1] or board_alone_score[2] < score[2]:
+                            guessed_win_prob = .5
+                        else:
+                            guessed_win_prob = .05 * max([x / 4 for x in State.hole_cards])
                     if paired_board(board_cards) != NOT_PAIRED_BOARD:
                         guessed_win_prob = .3
                         guessed_win_prob += .04 * (score[1] - paired_board(board_cards))
@@ -276,6 +281,8 @@ class River(object):
             if not lo: return call_action
 
             if score[0] >= STRAIGHT:
+                if board_correlation(board_cards) >= 4 and not i_got_the_nuts:
+                    return call_action
                 return 'RAISE:%d' % hi
 
             if score[0] == THREE_OF_A_KIND and quick_check_if_hole_helps(score, board_cards):

@@ -72,10 +72,18 @@ class State(object):
         cls.bb = int(bb)
         cls.num_hands = int(numHands)
         cls.timeBank = float(timeBank)
+        cls.check_fold_to_win = False
 
-        # TODO: Consider adjusting aggressiveness and looseness based upon
-        # who the opponents are
-        # TODO: Consider resetting aggressiveness and looseness
+        if cls.looseness > 2.0:
+            cls.looseness = 2.0
+        if cls.looseness < .5:
+            cls.looseness = .5
+
+        if cls.aggressiveness > 2.0:
+            cls.aggressiveness = 2.0
+        if cls.aggressiveness < .5:
+            cls.aggressiveness = .5
+
 
 
     @classmethod
