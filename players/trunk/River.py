@@ -136,6 +136,8 @@ class River(object):
         i_called = 'CALL' in prev_actions[0]
         i_got_the_nuts = i_has_the_nuts(State.hole_cards, board_cards)
 
+        print 'River score', score
+
         if i_got_the_nuts:
             print 'I GOT THE NUTS'
 
@@ -190,12 +192,14 @@ class River(object):
                 if board_correlation(board_cards) >= 3:
                     if random() > BLUFF_AT_SCARY_BOARD:
                         bet_amt = max(min(int(2 * lo * State.aggressiveness), hi), lo)
+                        print 'River bluff'
                         return 'BET:%d' % bet_amt
 
                 if board_correlation(board_cards) >= 4 \
                         and not i_called:
                     if random() > BLUFF_AT_REALLY_SCARY_BOARD:
                         bet_amt = max(min(int(2 * lo * State.aggressiveness), hi), lo)
+                        print 'River bluff'
                         return 'BET:%d' % bet_amt
 
                 # Figure out if we are the last one to act and dont give free check

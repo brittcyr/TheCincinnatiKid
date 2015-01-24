@@ -126,6 +126,8 @@ class Turn(object):
         score = score_best_five(board_cards + State.hole_cards)
         i_called = 'CALL' in prev_actions[0]
 
+        print 'Turn score', score
+
         # CHECK / BET           1
         # CALL / FOLD / RAISE   2
 
@@ -178,12 +180,14 @@ class Turn(object):
                 if board_correlation(board_cards) >= 3:
                     if random() > BLUFF_AT_SCARY_BOARD:
                         bet_amt = max(min(int(2 * lo * State.aggressiveness), hi), lo)
+                        print 'Turn bluff'
                         return 'BET:%d' % bet_amt
 
                 if board_correlation(board_cards) >= 4 \
                         and not i_called:
                     if random() > BLUFF_AT_REALLY_SCARY_BOARD:
                         bet_amt = max(min(int(4 * lo * State.aggressiveness), hi), lo)
+                        print 'Turn bluff'
                         return 'BET:%d' % bet_amt
 
                 return 'CHECK'

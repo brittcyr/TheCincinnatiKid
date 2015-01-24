@@ -111,6 +111,7 @@ class Flop(object):
 
         # These are the variables based on position
         score = score_best_five(board_cards + State.hole_cards)
+        print 'Flop score is', score
 
         # CHECK / BET           1
         # CALL / FOLD / RAISE   2
@@ -162,6 +163,7 @@ class Flop(object):
                 if board_correlation(board_cards) >= 3:
                     if random() > BLUFF_AT_SCARY_BOARD:
                         bet_amt = max(min(int(2 * lo * State.aggressiveness), hi), lo)
+                        print 'Flop bluff'
                         return 'BET:%d' % bet_amt
 
                 return 'CHECK'
