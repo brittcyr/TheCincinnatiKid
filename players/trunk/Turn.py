@@ -156,7 +156,7 @@ class Turn(object):
                 if i_called: return try_to_check(legal_actions)
 
                 if score[0] >= TWO_PAIR:
-                    if paired_board(board_cards) == score[1]:
+                    if score[0] == TWO_PAIR and paired_board(board_cards) == score[1]:
                         return 'BET:%d' % lo
                     bet_amt = max(min(int(hi * State.aggressiveness), hi), lo)
                     return 'BET:%d' % bet_amt

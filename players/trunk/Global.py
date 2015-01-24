@@ -22,6 +22,7 @@ class State(object):
     stack2 = 0
     stack3 = 0
     num_active = 0
+    total_hands_played = 0
     check_fold_to_win = False
     hand_actions = []
 
@@ -65,6 +66,7 @@ class State(object):
     def new_game(cls, data):
         new_game, yourName, opp1Name, opp2Name, stackSize, bb, \
                 numHands, timeBank = data.split()
+        # TODO: Clean up previous game stats
         # NEWGAME yourName opp1Name opp2Name stackSize bb numHands timeBank
         cls.opp1Name = opp1Name
         cls.opp2Name = opp2Name
@@ -98,6 +100,7 @@ class State(object):
         cls.stack1 = int(stackSize1)
         cls.stack2 = int(stackSize2)
         cls.stack3 = int(stackSize3)
+        cls.total_hands_played += 1
 
         # Update my stack size
         if cls.seat == 1:
