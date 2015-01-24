@@ -190,7 +190,7 @@ class River(object):
                 return 'BET:%d' % lo
             else:
                 # Bluff at scary board
-                if board_correlation(board_cards) >= 3:
+                if board_correlation(board_cards) >= 3 and not i_called:
                     if random() > BLUFF_AT_SCARY_BOARD:
                         bet_amt = max(min(int(2 * lo * State.aggressiveness), hi), lo)
                         print 'River bluff'
