@@ -80,6 +80,9 @@ class Preflop(object):
         active2 = data.pop(0)
         active3 = data.pop(0)
 
+        numActivePlayers = numActivePlayers - \
+                len([x for x in State.prev_actions if 'FOLD' in x])
+
         numLastActions = int(data.pop(0))
 
         prev_actions = []
@@ -205,6 +208,9 @@ class Preflop(object):
             if hand_score > (PLAY_PREFLOP - BB_EXTRA) / State.looseness:
                 lo, hi = split_raise(legal_actions)
                 if not lo: return try_to_call(legal_actions)
+
+                if [x for x in prev_actions if 'RAISE' in x]:
+                    hand_score = hand_score ** 2
 
                 # Deciding to raise if hand is great
                 if hand_score > BB_MAX_RAISE_3H:
