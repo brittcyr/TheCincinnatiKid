@@ -212,7 +212,7 @@ class Turn(object):
                 elif score[0] == TWO_PAIR:
                     if paired_board(board_cards) != NOT_PAIRED_BOARD:
                         guessed_win_prob = .3
-                        guessed_win_prob += .08 * (score[1] - paired_board(board_cards))
+                        guessed_win_prob += .04 * (score[1] - paired_board(board_cards))
                     else:
                         guessed_win_prob += .6
                         guessed_win_prob += .04 * score[1]

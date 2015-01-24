@@ -55,6 +55,7 @@ class Player:
         if not action:
             action = "CHECK"
 
+        print action
         return action
 
 

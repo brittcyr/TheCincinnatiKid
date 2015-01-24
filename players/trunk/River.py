@@ -134,6 +134,9 @@ class River(object):
         i_called = 'CALL' in prev_actions[0]
         i_got_the_nuts = i_has_the_nuts(State.hole_cards, board_cards)
 
+        if i_got_the_nuts:
+            print 'I GOT THE NUTS'
+
         # CHECK / BET           1
         # CALL / FOLD / RAISE   2
 
@@ -225,7 +228,7 @@ class River(object):
                 elif score[0] == TWO_PAIR:
                     if paired_board(board_cards) != NOT_PAIRED_BOARD:
                         guessed_win_prob = .3
-                        guessed_win_prob += .08 * (score[1] - paired_board(board_cards))
+                        guessed_win_prob += .04 * (score[1] - paired_board(board_cards))
                     else:
                         guessed_win_prob += .6
                         guessed_win_prob += .04 * score[1]
@@ -240,6 +243,7 @@ class River(object):
                 if pot_odds < guessed_win_prob:
                     prev_bets = [x for x in prev_actions if 'RAISE' in x or 'BET' in x]
                     multibet = len(prev_bets) >= 2
+                    print multibet, pot_odds, guessed_win_prob
                     if 2 * pot_odds < guessed_win_prob and not multibet:
                         lo, hi = split_raise(legal_actions)
                         if not lo: return call_action
