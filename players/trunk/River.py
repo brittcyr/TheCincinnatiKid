@@ -199,14 +199,14 @@ class River(object):
                 if board_correlation(board_cards) >= 4 \
                         and not i_called:
                     if random() > BLUFF_AT_REALLY_SCARY_BOARD:
-                        bet_amt = max(min(int(2 * lo * State.aggressiveness), hi), lo)
+                        bet_amt = max(min(int(.1 * potSize * State.aggressiveness), hi), lo)
                         print 'River bluff'
                         return 'BET:%d' % bet_amt
 
                 # Figure out if we are the last one to act and dont give free check
                 if len(prev_actions) >= 2 and 'DEAL' in prev_actions[1] and 'CHECK' \
                         in prev_actions[0]:
-                    bet_amt = max(min(int(2 * lo * State.aggressiveness), hi), lo)
+                    bet_amt = max(min(int(.25 * potSize * State.aggressiveness), hi), lo)
                     return 'BET:%d' % bet_amt
 
                 return try_to_check(legal_actions)
