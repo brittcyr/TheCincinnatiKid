@@ -3,8 +3,8 @@ import os
 
 class Printer(object):
     results = ''
-    tourney_num = int(datetime.datetime.now().strftime("%s")) * 10000
-    hand_num = int(datetime.datetime.now().strftime("%s")) * 10000
+    tourney_num = int(datetime.datetime.now().strftime("%s")) * 100000
+    hand_num = int(datetime.datetime.now().strftime("%s")) * 100000
     player_three_in = True
     loser = ''
     second = ''
@@ -29,12 +29,12 @@ class Printer(object):
         f = open(file_name, 'w')
         f.write(cls.results)
         f.write("Pokerstars Tournament #%d, Pot Limit Hold'em\n" % cls.tourney_num)
-        f.write("Buy-In: 80/0\n")
+        f.write("Buy-In: $80.00/$0.00\n")
         f.write("3 players\n")
-        f.write("Total Prize Pool: 240\n")
-        f.write("1: %s , 180\n" % cls.winner)
-        f.write("2: %s , 60\n" % cls.second)
-        f.write("3: %s \n" % cls.loser)
+        f.write("Total Prize Pool: $240.00\n")
+        f.write("1: %s , $180.00 (75%)\n" % cls.winner)
+        f.write("2: %s , $60.00 (25%)\n" % cls.second)
+        f.write("3: %s , \n" % cls.loser)
         f.close()
 
 def create_new_game_line(game_num, tournament_num):
