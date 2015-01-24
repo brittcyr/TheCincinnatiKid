@@ -217,7 +217,7 @@ class River(object):
         # Need to decide if we should FOLD / CALL / RAISE
         if any([x for x in legal_actions if 'CALL' in x]):
             # Never call a bet if we are playing the board
-            if board_alond_score == score:
+            if board_alone_score == score:
                 return 'FOLD'
 
             # Compute pot odds

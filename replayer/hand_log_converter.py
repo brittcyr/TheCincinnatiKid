@@ -25,7 +25,7 @@ class Printer(object):
     @classmethod
     def write_result(cls):
         cls.tourney_in_round += 1
-        file_name = cls.file_name + str(cls.tourney_in_round)
+        file_name = './results/' + 'Game' + str(cls.tourney_in_round) + cls.filename
         f = open(file_name, 'w')
         f.write(cls.results)
         f.write("Pokerstars Tournament #%d, Pot Limit Hold'em\n" % cls.tourney_num)
@@ -267,7 +267,7 @@ def parse_file(filename, hero):
 
         if '6.176 MIT Pokerbots ' in line:
             if Printer.winner:
-                do_print(p1name, p1val, p2name, p2val, p3name, p3val, hero, prev_actions, hero_hole, hand_num, final_pot, board, holes)
+                Printer.write_result()
             else:
                 continue
 
@@ -305,21 +305,18 @@ def do_print(p1name, p1val, p2name, p2val, p3name, p3val, hero, prev_actions, he
     hand_str += "Seat 2: %s (small blind)\n" % (p2name)
     if int(p3val) > 0:
         hand_str += "Seat 3: %s (big blind)\n" % (p3name)
-    #else:
-    #    hand_str += "Seat 3: %s\n" % (p3name)
 
     hand_str += '\n'
     Printer.add_hand(hand_str)
     Printer.hand_num += 1
 
 if __name__ == '__main__':
-    prefix = '../hand_logs/Day8/'
+    prefix = '../hand_logs/'
     files = os.listdir(prefix)
     for filename in files:
         Printer.reset()
         Printer.filename = filename
         Printer.tourney_in_round = 0
         parse_file(prefix + filename, 'TheCincinnatiKid')
-        results_prefix = './results/'
         Printer.write_result()
         Printer.tourney_num += 1
