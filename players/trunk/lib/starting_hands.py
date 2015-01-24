@@ -6,7 +6,7 @@ from hand_eval import get_best_five, eval_hand
 def classify_hole(hole_card1, hole_card2):
     hole_cards = [hole_card1, hole_card2]
     suited = hole_cards[0] % 4 == hole_cards[1] % 4
-    vals = sorted([x % 13 for x in hole_cards])
+    vals = sorted([x / 4 for x in hole_cards])
     vals = vals + [suited]
 
     return tuple(vals)
