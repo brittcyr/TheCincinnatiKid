@@ -42,6 +42,12 @@ class State(object):
             cls.looseness = 0.0
             return
 
+        # Final Hand, go for broke
+        if cls.num_hands == cls.handId:
+            cls.aggressiveness = 10
+            cls.looseness = 10
+            return
+
         # If we need to late game gamble, then increase aggressiveness
         THRESHOLD = 5
         # If we are late and need more than threshold bb's per hand
@@ -76,15 +82,8 @@ class State(object):
         cls.timeBank = float(timeBank)
         cls.check_fold_to_win = False
 
-        if cls.looseness > 2.0:
-            cls.looseness = 2.0
-        if cls.looseness < .5:
-            cls.looseness = .5
-
-        if cls.aggressiveness > 2.0:
-            cls.aggressiveness = 2.0
-        if cls.aggressiveness < .5:
-            cls.aggressiveness = .5
+        cls.looseness = 1.0
+        cls.aggressiveness = 1.0
 
 
 
