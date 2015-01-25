@@ -72,7 +72,6 @@ class State(object):
     def new_game(cls, data):
         new_game, yourName, opp1Name, opp2Name, stackSize, bb, \
                 numHands, timeBank = data.split()
-        # TODO: Clean up previous game stats
         # NEWGAME yourName opp1Name opp2Name stackSize bb numHands timeBank
         cls.opp1Name = opp1Name
         cls.opp2Name = opp2Name
@@ -158,6 +157,5 @@ class State(object):
             if numBoardCards >= 3 and folders:
                 cls.aggressiveness -= .05
 
-        # TODO: Parse the hand_actions and do statistics
         print cls.hand_actions
 

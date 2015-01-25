@@ -61,9 +61,6 @@ def i_has_the_nuts(hole, board_cards):
                 return False
     return True
 
-# TODO: Assign a probability to every possible hole cards that the
-# opponent could have and whether each will win
-
 NOT_PAIRED_BOARD = -1
 def paired_board(board):
     board = sorted([x / 4 for x in board])
