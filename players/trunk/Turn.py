@@ -163,7 +163,7 @@ class Turn(object):
                 # Bet for at least middle pair
                 if score[0] >= PAIR and quick_check_if_hole_helps(score, board_cards) and \
                         classify_pair_turn(board_cards, score) >= 5:
-                    bet_amt = max(min(int(bet_prob * hi * State.aggressiveness), hi), lo)
+                    bet_amt = max(min(int(bet_prob * potSize * .5), hi), lo)
                     return 'BET:%d' % bet_amt
 
                 return 'BET:%d' % lo
