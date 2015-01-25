@@ -180,7 +180,8 @@ class River(object):
                         bet_amt = max(min(int(hi * State.aggressiveness), hi), lo)
                         return 'BET:%d' % bet_amt
                     else:
-                        return 'BET:%d' % lo
+                        bet_amt = max(min(int(potSize * .5), hi), lo)
+                        return 'BET:%d' % bet_amt
 
                 if score[0] >= PAIR and quick_check_if_hole_helps(score, board_cards) and \
                         classify_pair_river(board_cards, score) >= 5:

@@ -30,6 +30,7 @@ class State(object):
     check_fold_to_win = False
     hand_actions = []
     deck = []
+    names = []
 
 
     @classmethod
@@ -77,7 +78,6 @@ class State(object):
     def new_game(cls, data):
         new_game, yourName, opp1Name, opp2Name, stackSize, bb, \
                 numHands, timeBank = data.split()
-        # TODO: Clean up previous game stats
         # NEWGAME yourName opp1Name opp2Name stackSize bb numHands timeBank
         cls.opp1Name = opp1Name
         cls.opp2Name = opp2Name
@@ -92,18 +92,27 @@ class State(object):
 
 
 
+        # Only do this on the first time around
         if not cls.deck:
             round_num = 0
 
             try:
                 path = os.getcwd()
                 os.chdir(os.path.dirname(os.path.realpath(__file__)))
+                print 'NAMES', [opp1Name, yourName, opp2Name]
                 names, round_num = decode_names([opp1Name, yourName, opp2Name])
+                print 'NAMES', names
+                print 'ROUND', round_num
+                if round_num == None:
+                    round_num = -1
 
+                # TODO: if round_num == None, then we have a problem. we need to try
+                # lots of round_nums
                 sp = subprocess.Popen(['java', 'DeckDecoder', names[0], \
                         names[1], names[2], str(round_num), \
                         str(cls.num_hands + 1000)], stdout=subprocess.PIPE, \
                         stderr=subprocess.PIPE)
+
             except Exception as e:
                 print e
 
@@ -112,9 +121,8 @@ class State(object):
 
             hands = out.replace('[', '').replace(']', '').split('\n')
             cls.deck = [x.replace(' ', '').split(',') for x in hands]
-            print cls.deck
-
-
+            cls.names = names
+            cls.round_num = round_num
 
 
 
@@ -147,8 +155,34 @@ class State(object):
 
         State.consider_time_of_game()
         cls.hand_actions = []
-        print cls.deck[cls.total_hands_played]
+        hand = cls.deck[cls.total_hands_played]
         cls.total_hands_played += 1
+
+        print hand
+
+        # TODO: Do stuff with this information if we validate it
+        # Only chase for the first 10% of hands
+        if cls.hole_cards[0] not in hand[0:6] or cls.hole_cards not in hand[0:6]:
+            if cls.round_num < cls.num_hands * .1:
+                try:
+                    path = os.getcwd()
+                    os.chdir(os.path.dirname(os.path.realpath(__file__)))
+                    cls.round_num += 1
+                    sp = subprocess.Popen(['java', 'DeckDecoder', cls.names[0], \
+                            cls.names[1], cls.names[2], str(cls.round_num), \
+                            str(cls.num_hands + 1000)], stdout=subprocess.PIPE, \
+                            stderr=subprocess.PIPE)
+
+                    out, err = sp.communicate()
+                    os.chdir(path)
+
+                    hands = out.replace('[', '').replace(']', '').split('\n')
+                    cls.deck = [x.replace(' ', '').split(',') for x in hands]
+                    print 'Trying new deck', cls.deck[cls.total_hands_played], cls.round_num
+                except Exception as e:
+                    print e
+        else:
+            print 'I think I got it', hand, cls.hole_cards
 
 
     @classmethod
@@ -190,7 +224,6 @@ class State(object):
             if numBoardCards >= 3 and folders:
                 cls.aggressiveness -= .05
 
-        # TODO: Parse the hand_actions and do statistics
         print cls.hand_actions
 
 
@@ -211,6 +244,15 @@ def decode_names(names):
         teams.append(line.strip())
     f.close()
 
+    for team in teams:
+        salt = "randomstring"
+        prehash = team + salt
+        seed = abs(java_string_hashcode(prehash))
+        if seed in names:
+            results.append(team)
+        if len(results) == 3:
+            return results, None
+
     for rnd in xrange(100):
         for team in teams:
             salt = "randomstring"
@@ -222,4 +264,4 @@ def decode_names(names):
             if len(results) == 3:
                 return results, rnd
 
-    return ['TheCincinnatiKid', 'helenkeller', 'Str8Trippin'], 11
+    return ['TheCincinnatiKid', 'TheHouse', 'CJK'], 10
