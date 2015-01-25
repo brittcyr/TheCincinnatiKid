@@ -338,3 +338,24 @@ def score_best_five(cards):
                 if score > best[0]:
                     best = (score, current)
         return best[0]
+
+DECK = 52
+THREE_OF_A_KIND = 3
+def count_drawing_outs(hole, board):
+    """Count the number of outs to a three of a kind or better
+
+    Args:
+        hole: A sorted list of cards in int form
+        board: A sorted list of cards in int form
+
+    Returns:
+        number of outs
+    """
+    outs = 0
+    for card in range(DECK):
+        if card in hole or card in board: continue
+        if score_best_five(hole + board + [card])[0] >= THREE_OF_A_KIND:
+            best_five = get_best_five(hole + board + [card])
+            if hole[0] in best_five or hole[1] in best_five:
+                outs += 1
+    return outs

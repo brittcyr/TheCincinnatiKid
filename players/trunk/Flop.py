@@ -1,4 +1,5 @@
-from lib.hand_eval import convert_string_to_int, score_best_five, eval_hand
+from lib.hand_eval import convert_string_to_int, score_best_five, eval_hand, \
+        count_drawing_outs
 from lib.board_correlation import straight_correlation, flush_correlation
 from Global import State
 from random import random
@@ -33,15 +34,6 @@ def classify_pair_flop(board, score):
     if score[1] == board[2]: return 5
     if score[1] > board[2]: return 6
     return -1
-
-DECK = 52
-def count_drawing_outs(hole, board):
-    outs = 0
-    for card in range(DECK):
-        if card in hole or card in board: continue
-        if score_best_five(hole + board + [card])[0] >= THREE_OF_A_KIND:
-            outs += 1
-    return outs
 
 def board_correlation(board_cards):
     return max(flush_correlation(board_cards), \
