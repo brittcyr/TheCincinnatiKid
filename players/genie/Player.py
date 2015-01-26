@@ -42,6 +42,12 @@ class Player:
             if word == "GETACTION":
                 try:
                     action = Player.get_action(data)
+                    if ':' in action:
+                        amount = int(action.split(':')[-1])
+                        # Do not push a lot of chips if it is not a good spot
+                        if amount >= 20:
+                            if State.current_result == False:
+                                action = "CHECK"
                     s.send("%s\n" % (action))
                 except Exception as e:
                     print 'ERROR IN THE CODE'

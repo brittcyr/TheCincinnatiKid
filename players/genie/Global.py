@@ -1,4 +1,4 @@
-from lib.hand_eval import convert_string_to_int
+from lib.hand_eval import convert_string_to_int, score_best_five
 import subprocess
 import os
 import os.path
@@ -31,6 +31,7 @@ class State(object):
     hand_actions = []
     deck = []
     names = []
+    current_result = None
 
 
     @classmethod
@@ -106,8 +107,6 @@ class State(object):
                 if round_num == None:
                     round_num = -1
 
-                # TODO: if round_num == None, then we have a problem. we need to try
-                # lots of round_nums
                 sp = subprocess.Popen(['java', 'DeckDecoder', names[0], \
                         names[1], names[2], str(round_num), \
                         str(cls.num_hands + 1000)], stdout=subprocess.PIPE, \
@@ -159,11 +158,14 @@ class State(object):
         cls.total_hands_played += 1
 
         print hand
+        hand = [convert_string_to_int(x) for x in hand]
+        print hand
+        cls.current_result = None
 
-        # TODO: Do stuff with this information if we validate it
         # Only chase for the first 10% of hands
         if cls.hole_cards[0] not in hand[0:6] or cls.hole_cards not in hand[0:6]:
-            if cls.round_num < cls.num_hands * .1:
+            print 'Round num and num hands', cls.round_num, cls.num_hands
+            if cls.round_num < cls.num_hands * .25:
                 try:
                     path = os.getcwd()
                     os.chdir(os.path.dirname(os.path.realpath(__file__)))
@@ -178,11 +180,48 @@ class State(object):
 
                     hands = out.replace('[', '').replace(']', '').split('\n')
                     cls.deck = [x.replace(' ', '').split(',') for x in hands]
-                    print 'Trying new deck', cls.deck[cls.total_hands_played], cls.round_num
+                    print 'Trying new deck', cls.deck[cls.total_hands_played - 1], cls.round_num
                 except Exception as e:
                     print e
         else:
             print 'I think I got it', hand, cls.hole_cards
+            hole1 = [hand[0], hand[3]]
+            hole2 = [hand[1], hand[4]]
+            hole3 = [hand[2], hand[5]]
+            score1 = score_best_five(hand[6:] + hole1)
+            score2 = score_best_five(hand[6:] + hole2)
+            score3 = score_best_five(hand[6:] + hole3)
+            if set(cls.hole_cards) == set(hole1):
+                if score1 >= score2 and score1 >= score3:
+                    # I win
+                    print 'I win', hole1, score1
+                    cls.current_result = True
+                else:
+                    # I lose
+                    print 'I lose', hole1, score1
+                    cls.current_result = False
+
+            elif set(cls.hole_cards) == set(hole2):
+                if score2 >= score1 and score2 >= score3:
+                    # I win
+                    print 'I win', hole2, score2
+                    cls.current_result = True
+                else:
+                    # I lose
+                    print 'I lose', hole2, score2
+                    cls.current_result = False
+
+            elif set(cls.hole_cards) == set(hole3):
+                if score3 >= score1 and score3 >= score2:
+                    # I win
+                    print 'I win', hole3, score3
+                    cls.current_result = True
+                else:
+                    # I lose
+                    print 'I lose', hole3, score3
+                    cls.current_result = False
+            else:
+                print 'I couldnt guess hand', cls.hole_cards, hand
 
 
     @classmethod
@@ -249,4 +288,4 @@ def decode_names(names):
             if len(results) == 3:
                 return results, rnd
 
-    return ['TheCincinnatiKid', 'TheHouse', 'CJK'], 10
+    return ['TheCincinnatiKid', 'TheHouse', 'CJK'], 0
