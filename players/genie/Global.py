@@ -111,17 +111,17 @@ class State(object):
                         names[1], names[2], str(round_num), \
                         str(cls.num_hands + 1000)], stdout=subprocess.PIPE, \
                         stderr=subprocess.PIPE)
+                out, err = sp.communicate()
+
+                hands = out.replace('[', '').replace(']', '').split('\n')
+                cls.deck = [x.replace(' ', '').split(',') for x in hands]
+                cls.names = names
+                cls.round_num = round_num
 
             except Exception as e:
                 print e
 
-            out, err = sp.communicate()
             os.chdir(path)
-
-            hands = out.replace('[', '').replace(']', '').split('\n')
-            cls.deck = [x.replace(' ', '').split(',') for x in hands]
-            cls.names = names
-            cls.round_num = round_num
 
 
 
@@ -154,18 +154,18 @@ class State(object):
 
         State.consider_time_of_game()
         cls.hand_actions = []
+        cls.current_result = None
         hand = cls.deck[cls.total_hands_played]
         cls.total_hands_played += 1
 
         print hand
         hand = [convert_string_to_int(x) for x in hand]
         print hand
-        cls.current_result = None
+        print 'HOLE CARDS', cls.hole_cards
 
-        # Only chase for the first 10% of hands
-        if cls.hole_cards[0] not in hand[0:6] or cls.hole_cards not in hand[0:6]:
+        if cls.hole_cards[0] not in hand[0:6] or cls.hole_cards[1] not in hand[0:6]:
             print 'Round num and num hands', cls.round_num, cls.num_hands
-            if cls.round_num < cls.num_hands * .25:
+            if (cls.num_hands - cls.handId) * .05 <= cls.timeBank:
                 try:
                     path = os.getcwd()
                     os.chdir(os.path.dirname(os.path.realpath(__file__)))
@@ -259,7 +259,7 @@ def java_string_hashcode(s):
 
 
 def decode_names(names):
-    names = [x[:-1] for x in names]
+    names = [int(x[:-1]) for x in names]
     results = []
 
     teams = []

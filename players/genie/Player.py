@@ -43,11 +43,23 @@ class Player:
                 try:
                     action = Player.get_action(data)
                     if ':' in action:
-                        amount = int(action.split(':')[-1])
-                        # Do not push a lot of chips if it is not a good spot
-                        if amount >= 20:
-                            if State.current_result == False:
-                                action = "CHECK"
+                        try:
+                            amount = int(action.split(':')[-1])
+                            # Do not push a lot of chips if it is not a good spot
+                            if amount >= 30:
+                                if State.current_result == False:
+                                    # This might be illegal, so it will force fold
+                                    action = "CHECK"
+                                    print 'CHECK/FOLD LOSING HAND'
+                        except Exception as e:
+                            print e
+                    if 'FOLD' in action:
+                        if State.current_result = True:
+                            # CALL instead
+                            call = [x for x in data.split() if 'CALL' in x][-1]
+                            action = call
+                            print 'CALL WINNING HAND'
+
                     s.send("%s\n" % (action))
                 except Exception as e:
                     print 'ERROR IN THE CODE'
