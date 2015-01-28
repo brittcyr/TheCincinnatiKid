@@ -41,6 +41,12 @@ class State(object):
         stacks.pop(stacks.index(cls.stackSize))
         rest = sum(stacks)
 
+        # If we are losing and we are close to second to last
+        if cls.stackSize == min(stacks) and \
+                cls.stackSize < 30 * int(cls.bb) and \
+                sorted(stacks)[1] < cls.stackSize + 10 * int(cls.bb):
+            cls.looseness -= .005
+
         # If we should CHECK/FOLD, then just adjust the looseness
         check_to_lost_amt = (cls.num_hands - cls.handId) * ((int(cls.bb) * 3 / 2) + 1)
         if 2 * check_to_lost_amt < cls.stackSize - rest:
@@ -243,10 +249,6 @@ class State(object):
         cls.hand_actions += last_actions
 
         cls.timeBank = float(data.pop(0))
-
-        win = [x for x in last_actions if 'WIN' in x]
-        win, amount, winner = win.split(':')
-        amount = int(amount)
 
         print cls.hand_actions
 
