@@ -54,7 +54,7 @@ class Player:
                         except Exception as e:
                             print e
                     if 'FOLD' in action:
-                        if State.current_result = True:
+                        if State.current_result == True:
                             # CALL instead
                             call = [x for x in data.split() if 'CALL' in x][-1]
                             action = call
