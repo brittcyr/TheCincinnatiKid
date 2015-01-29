@@ -46,7 +46,7 @@ class Player:
                         try:
                             amount = int(action.split(':')[-1])
                             # Do not push a lot of chips if it is not a good spot
-                            if amount >= 30:
+                            if amount >= 40:
                                 if State.current_result == False:
                                     # This might be illegal, so it will force fold
                                     action = "CHECK"

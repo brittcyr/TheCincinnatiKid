@@ -197,6 +197,7 @@ class State(object):
             score1 = score_best_five(hand[6:] + hole1)
             score2 = score_best_five(hand[6:] + hole2)
             score3 = score_best_five(hand[6:] + hole3)
+            # TODO: Check it against the list of who is playing in the hand
             if set(cls.hole_cards) == set(hole1):
                 if score1 >= score2 and score1 >= score3:
                     # I win

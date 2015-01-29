@@ -82,6 +82,8 @@ class Preflop(object):
 
         numActivePlayers = numActivePlayers - \
                 len([x for x in State.hand_actions if 'FOLD' in x])
+        if numActivePlayers not in [2, 3]:
+            numActivePlayers = 2
 
         numLastActions = int(data.pop(0))
 
