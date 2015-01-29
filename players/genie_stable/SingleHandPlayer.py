@@ -90,4 +90,4 @@ class Player:
 
 if __name__ == '__main__':
     bot = Player()
-    bot.run('/afs/athena.mit.edu/user/c/y/cyrbritt/Downloads/MiniTournament_Mini-Tournament-Round-2_TheCincinnatiKid_vs_CJK_vs_kerbopots_p2.dump')
+    bot.run('/home/cyrbritt/Downloads/MiniTournament_Mini-Tournament-Round-2_CJK_vs_TheCincinnatiKid_vs_kerbopots_p4.dump')

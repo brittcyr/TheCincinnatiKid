@@ -16,7 +16,6 @@ class State(object):
     board = []
     num_hands = 0
     bb = 0
-    yourName = ''
     opp1Name = ''
     opp2Name = ''
     stackSize = 0
@@ -33,8 +32,6 @@ class State(object):
     deck = []
     names = []
     current_result = None
-    ordered = False
-    who_i_beat = []
 
 
     @classmethod
@@ -89,7 +86,6 @@ class State(object):
         new_game, yourName, opp1Name, opp2Name, stackSize, bb, \
                 numHands, timeBank = data.split()
         # NEWGAME yourName opp1Name opp2Name stackSize bb numHands timeBank
-        cls.yourName = yourName
         cls.opp1Name = opp1Name
         cls.opp2Name = opp2Name
         cls.stackSize = int(stackSize)
@@ -173,8 +169,6 @@ class State(object):
         print hand
         print 'HOLE CARDS', cls.hole_cards
 
-        cls.who_i_beat = []
-
         if cls.hole_cards[0] not in hand[0:6] or cls.hole_cards[1] not in hand[0:6]:
             print 'Round num and num hands', cls.round_num, cls.num_hands
             if (cls.num_hands - cls.handId) * .05 <= cls.timeBank:
@@ -192,7 +186,6 @@ class State(object):
 
                     hands = out.replace('[', '').replace(']', '').split('\n')
                     cls.deck = [x.replace(' ', '').split(',') for x in hands]
-                    cls.ordered = False
                     print 'Trying new deck', cls.deck[cls.total_hands_played - 1], cls.round_num
                 except Exception as e:
                     print e
@@ -204,42 +197,7 @@ class State(object):
             score1 = score_best_five(hand[6:] + hole1)
             score2 = score_best_five(hand[6:] + hole2)
             score3 = score_best_five(hand[6:] + hole3)
-
-            ##############################################
-
-            cls.who_i_beat = []
-            if set(hole1) == set(cls.hole_cards):
-                if cls.ordered:
-                    if score1 >= score2:
-                        cls.who_i_beat.append(cls.ordered[1])
-                    if score1 >= score3:
-                        cls.who_i_beat.append(cls.ordered[2])
-                else:
-                    if score1 >= score2 and score1 >= score3:
-                        cls.who_i_beat.append([cls.opp1Name, cls.opp2Name])
-            elif set(hole2) == set(cls.hole_cards):
-                if cls.ordered:
-                    if score2 >= score3:
-                        cls.who_i_beat.append(cls.ordered[1])
-                    if score2 >= score1:
-                        cls.who_i_beat.append(cls.ordered[2])
-                else:
-                    if score2 >= score1 and score2 >= score3:
-                        cls.who_i_beat.append([cls.opp1Name, cls.opp2Name])
-            elif set(hole3) == set(cls.hole_cards):
-                if cls.ordered:
-                    if score3 >= score1:
-                        cls.who_i_beat.append(cls.ordered[1])
-                    if score3 >= score2:
-                        cls.who_i_beat.append(cls.ordered[2])
-                else:
-                    if score3 >= score1 and score3 >= score2:
-                        cls.who_i_beat.append([cls.opp1Name, cls.opp2Name])
-
-            print 'I beat: ', who_i_beat
-            #############################################
-
-
+            # TODO: Check it against the list of who is playing in the hand
             if set(cls.hole_cards) == set(hole1):
                 if score1 >= score2 and score1 >= score3:
                     # I win
@@ -292,53 +250,6 @@ class State(object):
         cls.hand_actions += last_actions
 
         cls.timeBank = float(data.pop(0))
-
-        if not cls.ordered:
-            shows = [x for x in cls.hand_actions if 'SHOW' in x]
-            if shows:
-                for show in shows:
-                    # Order the players
-                    hand = cls.deck[cls.total_hands_played - 1]
-                    int_hand = [convert_string_to_int(x) for x in hand]
-
-                    # It is opp1 showing
-                    if cls.opp1Name in show:
-                        # If I am first
-                        if cls.hole_cards[0] in [int_hand[0], int_hand[3]]:
-                            if hand[1] in show:
-                                cls.ordered = [cls.yourName, cls.opp1Name, cls.opp2Name]
-                            else:
-                                cls.ordered = [cls.yourName, cls.opp2Name, cls.opp1Name]
-                        elif cls.hole_cards[0] in [int_hand[1], int_hand[4]]:
-                            if hand[2] in show:
-                                cls.ordered = [cls.yourName, cls.opp1Name, cls.opp2Name]
-                            else:
-                                cls.ordered = [cls.yourName, cls.opp2Name, cls.opp1Name]
-                        elif cls.hole_cards[0] in [int_hand[2], int_hand[5]]:
-                            if hand[0] in show:
-                                cls.ordered = [cls.yourName, cls.opp1Name, cls.opp2Name]
-                            else:
-                                cls.ordered = [cls.yourName, cls.opp2Name, cls.opp1Name]
-                    # It is opp2 showing
-                    elif cls.opp2Name in show:
-                        # If I am first
-                        if cls.hole_cards[0] in [int_hand[0], int_hand[3]]:
-                            if hand[1] in show:
-                                cls.ordered = [cls.yourName, cls.opp2Name, cls.opp1Name]
-                            else:
-                                cls.ordered = [cls.yourName, cls.opp1Name, cls.opp2Name]
-                        elif cls.hole_cards[0] in [int_hand[1], int_hand[4]]:
-                            if hand[2] in show:
-                                cls.ordered = [cls.yourName, cls.opp2Name, cls.opp1Name]
-                            else:
-                                cls.ordered = [cls.yourName, cls.opp1Name, cls.opp2Name]
-                        elif cls.hole_cards[0] in [int_hand[2], int_hand[5]]:
-                            if hand[0] in show:
-                                cls.ordered = [cls.yourName, cls.opp2Name, cls.opp1Name]
-                            else:
-                                cls.ordered = [cls.yourName, cls.opp1Name, cls.opp2Name]
-
-
 
         print cls.hand_actions
 

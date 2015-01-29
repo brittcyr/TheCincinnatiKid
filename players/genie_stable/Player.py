@@ -7,6 +7,7 @@ from Preflop import Preflop
 from Flop import Flop
 from Turn import Turn
 from River import River
+from random import random
 
 """
 Simple example pokerbot, written in python.
@@ -42,21 +43,20 @@ class Player:
             if word == "GETACTION":
                 try:
                     action = Player.get_action(data)
-                    # TODO: Consider who is left in the hand and if all of them
-                    # are in the list of whom I beat
                     if ':' in action:
                         try:
                             amount = int(action.split(':')[-1])
                             # Do not push a lot of chips if it is not a good spot
                             if amount >= 40:
-                                if State.current_result == False:
-                                    # This might be illegal, so it will force fold
+                                # But do so only 90% of the time
+                                if State.current_result == False and random() < .9:
                                     action = "CHECK"
                                     print 'CHECK/FOLD LOSING HAND'
                         except Exception as e:
                             print e
                     if 'FOLD' in action:
-                        if State.current_result == True:
+                        # But do so only 70% of the time
+                        if State.current_result == True and random() < .7:
                             # CALL instead
                             call = [x for x in data.split() if 'CALL' in x][-1]
                             action = call
