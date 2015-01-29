@@ -7,6 +7,7 @@ from Preflop import Preflop
 from Flop import Flop
 from Turn import Turn
 from River import River
+from random import random
 
 """
 A copy of the regular player, but it is just for replaying a specific hand
@@ -31,14 +32,14 @@ class Player:
                             amount = int(action.split(':')[-1])
                             # Do not push a lot of chips if it is not a good spot
                             if amount >= 30:
-                                if State.current_result == False:
+                                if State.current_result == False and random() < .9:
                                     # This might be illegal, so it will force fold
                                     action = "CHECK"
                                     print 'CHECK/FOLD LOSING HAND'
                         except Exception as e:
                             print e
                     if 'FOLD' in action:
-                        if State.current_result == True:
+                        if State.current_result == True and random() < .7:
                             # CALL instead
                             call = [x for x in data.split() if 'CALL' in x][-1]
                             action = call
@@ -90,4 +91,4 @@ class Player:
 
 if __name__ == '__main__':
     bot = Player()
-    bot.run('/home/cyrbritt/Downloads/MiniTournament_Mini-Tournament-Round-2_CJK_vs_TheCincinnatiKid_vs_kerbopots_p4.dump')
+    bot.run('/afs/athena.mit.edu/user/c/y/cyrbritt/Downloads/MiniTournament_Mini-Tournament-Round-2_TheCincinnatiKid_vs_CJK_vs_kerbopots_p2.dump')

@@ -126,8 +126,9 @@ def is_four_of_a_kind(hand):
     Returns:
         boolean whether it is a four of a kind
     """
-    if hand[1] + 1 == hand[2] and hand[2] + 1 == hand[3]:
-        if hand[0] + 1 == hand[1] or hand[3] == hand[4]:
+    hand = [x / 4 for x in hand]
+    if hand[1] == hand[2] and hand[2] == hand[3]:
+        if hand[0] == hand[1] or hand[3] == hand[4]:
             return True
     return False
 
