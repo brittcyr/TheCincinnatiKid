@@ -161,13 +161,13 @@ class State(object):
         State.consider_time_of_game()
         cls.hand_actions = []
         cls.current_result = None
-        cls.total_hands_played += 1
         hand = cls.deck[cls.total_hands_played]
+        cls.total_hands_played += 1
 
-        #print hand
+        print hand
         hand = [convert_string_to_int(x) for x in hand]
-        #print hand
-        #print 'HOLE CARDS', cls.hole_cards
+        print hand
+        print 'HOLE CARDS', cls.hole_cards
 
         if cls.hole_cards[0] not in hand[0:6] or cls.hole_cards[1] not in hand[0:6]:
             #print 'Round num and num hands', cls.round_num, cls.num_hands
@@ -186,11 +186,11 @@ class State(object):
 
                     hands = out.replace('[', '').replace(']', '').split('\n')
                     cls.deck = [x.replace(' ', '').split(',') for x in hands]
-                    #print 'Trying new deck', cls.deck[cls.total_hands_played - 1], cls.round_num
+                    print 'Trying new deck', cls.deck[cls.total_hands_played - 1], cls.round_num
                 except Exception as e:
                     print e
         else:
-            #print 'I think I got it', hand, cls.hole_cards
+            print 'I think I got it', hand, cls.hole_cards
             hole1 = [hand[0], hand[3]]
             hole2 = [hand[1], hand[4]]
             hole3 = [hand[2], hand[5]]
