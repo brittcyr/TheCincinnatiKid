@@ -48,15 +48,15 @@ class Player:
                             amount = int(action.split(':')[-1])
                             # Do not push a lot of chips if it is not a good spot
                             if amount >= 40:
-                                # But do so only 90% of the time
-                                if State.current_result == False and random() < .9:
+                                # But do so only 80% of the time
+                                if State.current_result == False and random() < .8:
                                     action = "CHECK"
                                     print 'CHECK/FOLD LOSING HAND'
                         except Exception as e:
                             print e
                     if 'FOLD' in action:
-                        # But do so only 70% of the time
-                        if State.current_result == True and random() < .7:
+                        # But do so only 80% of the time
+                        if State.current_result == True and random() < .8:
                             # CALL instead
                             call = [x for x in data.split() if 'CALL' in x][-1]
                             action = call

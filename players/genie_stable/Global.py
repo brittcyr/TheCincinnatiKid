@@ -161,16 +161,16 @@ class State(object):
         State.consider_time_of_game()
         cls.hand_actions = []
         cls.current_result = None
-        hand = cls.deck[cls.total_hands_played]
         cls.total_hands_played += 1
+        hand = cls.deck[cls.total_hands_played]
 
-        print hand
+        #print hand
         hand = [convert_string_to_int(x) for x in hand]
-        print hand
-        print 'HOLE CARDS', cls.hole_cards
+        #print hand
+        #print 'HOLE CARDS', cls.hole_cards
 
         if cls.hole_cards[0] not in hand[0:6] or cls.hole_cards[1] not in hand[0:6]:
-            print 'Round num and num hands', cls.round_num, cls.num_hands
+            #print 'Round num and num hands', cls.round_num, cls.num_hands
             if (cls.num_hands - cls.handId) * .05 <= cls.timeBank:
                 try:
                     path = os.getcwd()
@@ -186,49 +186,48 @@ class State(object):
 
                     hands = out.replace('[', '').replace(']', '').split('\n')
                     cls.deck = [x.replace(' ', '').split(',') for x in hands]
-                    print 'Trying new deck', cls.deck[cls.total_hands_played - 1], cls.round_num
+                    #print 'Trying new deck', cls.deck[cls.total_hands_played - 1], cls.round_num
                 except Exception as e:
                     print e
         else:
-            print 'I think I got it', hand, cls.hole_cards
+            #print 'I think I got it', hand, cls.hole_cards
             hole1 = [hand[0], hand[3]]
             hole2 = [hand[1], hand[4]]
             hole3 = [hand[2], hand[5]]
             score1 = score_best_five(hand[6:] + hole1)
             score2 = score_best_five(hand[6:] + hole2)
             score3 = score_best_five(hand[6:] + hole3)
-            # TODO: Check it against the list of who is playing in the hand
             if set(cls.hole_cards) == set(hole1):
                 if score1 >= score2 and score1 >= score3:
                     # I win
-                    print 'I win', hole1, score1
+                    #print 'I win', hole1, score1
                     cls.current_result = True
                 else:
                     # I lose
-                    print 'I lose', hole1, score1
+                    #print 'I lose', hole1, score1
                     cls.current_result = False
 
             elif set(cls.hole_cards) == set(hole2):
                 if score2 >= score1 and score2 >= score3:
                     # I win
-                    print 'I win', hole2, score2
+                    #print 'I win', hole2, score2
                     cls.current_result = True
                 else:
                     # I lose
-                    print 'I lose', hole2, score2
+                    #print 'I lose', hole2, score2
                     cls.current_result = False
 
             elif set(cls.hole_cards) == set(hole3):
                 if score3 >= score1 and score3 >= score2:
                     # I win
-                    print 'I win', hole3, score3
+                    #print 'I win', hole3, score3
                     cls.current_result = True
                 else:
                     # I lose
-                    print 'I lose', hole3, score3
+                    #print 'I lose', hole3, score3
                     cls.current_result = False
-            else:
-                print 'I couldnt guess hand', cls.hole_cards, hand
+            #else:
+                #print 'I couldnt guess hand', cls.hole_cards, hand
 
 
     @classmethod
@@ -251,7 +250,7 @@ class State(object):
 
         cls.timeBank = float(data.pop(0))
 
-        print cls.hand_actions
+        #print cls.hand_actions
 
 
 def java_string_hashcode(s):
